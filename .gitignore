@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.vercel/
+audit/*.html
+audit/original-assets/
+.env*
+!.env.example

@@ -1,0 +1,191 @@
+[
+  {
+    "name": "kal-logo",
+    "source": "https://kal.kerala.gov.in/frontend/images/logo.png",
+    "width": 130,
+    "height": 80,
+    "bytes": 3110
+  },
+  {
+    "name": "kerala-emblem",
+    "source": "https://kal.kerala.gov.in/frontend/images/logo-kerala-red.png",
+    "width": 130,
+    "height": 80,
+    "bytes": 3542
+  },
+  {
+    "name": "favicon",
+    "source": "https://kal.kerala.gov.in/frontend/images/fav-ico.png",
+    "width": 130,
+    "height": 80,
+    "bytes": 3110
+  },
+  {
+    "name": "hero-neem",
+    "source": "https://kal.kerala.gov.in/storage/uploads/banners/176743088975.jpg",
+    "width": 1840,
+    "height": 884,
+    "bytes": 217834
+  },
+  {
+    "name": "hero-utility",
+    "source": "https://kal.kerala.gov.in/storage/uploads/banners/173613817556.webp",
+    "width": 1840,
+    "height": 884,
+    "bytes": 349982
+  },
+  {
+    "name": "hero-cargo",
+    "source": "https://kal.kerala.gov.in/storage/uploads/banners/173613935136.webp",
+    "width": 1840,
+    "height": 884,
+    "bytes": 338674
+  },
+  {
+    "name": "neem-g",
+    "source": "https://kal.kerala.gov.in/storage/uploads/products/176742924340.jpg",
+    "width": 900,
+    "height": 904,
+    "bytes": 101456
+  },
+  {
+    "name": "green-stream",
+    "source": "https://kal.kerala.gov.in/storage/uploads/products/173675908929.jpg",
+    "width": 440,
+    "height": 343,
+    "bytes": 28548
+  },
+  {
+    "name": "garbage-cart",
+    "source": "https://kal.kerala.gov.in/storage/uploads/products/173616760675.png",
+    "width": 410,
+    "height": 320,
+    "bytes": 25474
+  },
+  {
+    "name": "canopy-cart",
+    "source": "https://kal.kerala.gov.in/storage/uploads/products/178151772691.jpg",
+    "width": 900,
+    "height": 1200,
+    "bytes": 193556
+  },
+  {
+    "name": "tipping-cart",
+    "source": "https://kal.kerala.gov.in/storage/uploads/products/173616762180.png",
+    "width": 410,
+    "height": 320,
+    "bytes": 22338
+  },
+  {
+    "name": "mini-cart",
+    "source": "https://kal.kerala.gov.in/storage/uploads/products/174568000538.jpg",
+    "width": 410,
+    "height": 320,
+    "bytes": 22660
+  },
+  {
+    "name": "ice-cream-cart",
+    "source": "https://kal.kerala.gov.in/storage/uploads/products/176163096977.jpg",
+    "width": 900,
+    "height": 700,
+    "bytes": 46168
+  },
+  {
+    "name": "electric-buggy",
+    "source": "https://kal.kerala.gov.in/storage/uploads/products/174781735929.jpg",
+    "width": 410,
+    "height": 320,
+    "bytes": 26432
+  },
+  {
+    "name": "mini-cart-plus",
+    "source": "https://kal.kerala.gov.in/storage/uploads/products/176605720968.jpg",
+    "width": 900,
+    "height": 692,
+    "bytes": 170074
+  },
+  {
+    "name": "factory",
+    "source": "https://kal.kerala.gov.in/frontend/images/abut-m.png",
+    "width": 574,
+    "height": 598,
+    "bytes": 28464
+  },
+  {
+    "name": "cargo-cutout",
+    "source": "https://kal.kerala.gov.in/frontend/images/about-2.png",
+    "width": 636,
+    "height": 479,
+    "bytes": 39272
+  },
+  {
+    "name": "managing-director",
+    "source": "https://kal.kerala.gov.in/storage/uploads/directors/173613804875.jpg",
+    "width": 310,
+    "height": 280,
+    "bytes": 7440
+  },
+  {
+    "name": "director-finance",
+    "source": "https://kal.kerala.gov.in/storage/uploads/directors/174304782869.jpg",
+    "width": 310,
+    "height": 280,
+    "bytes": 8410
+  },
+  {
+    "name": "director-industries",
+    "source": "https://kal.kerala.gov.in/storage/uploads/directors/173450156419.png",
+    "width": 310,
+    "height": 280,
+    "bytes": 5302
+  },
+  {
+    "name": "chief-minister",
+    "source": "https://kal.kerala.gov.in/storage/uploads/governmentinfos/177934017475.png",
+    "width": 244,
+    "height": 282,
+    "bytes": 5768
+  },
+  {
+    "name": "industries-minister",
+    "source": "https://kal.kerala.gov.in/storage/uploads/governmentinfos/177933984682.jpg",
+    "width": 244,
+    "height": 282,
+    "bytes": 6832
+  },
+  {
+    "name": "gallery-1",
+    "source": "https://kal.kerala.gov.in/storage/uploads/photos/175109406614.jpg",
+    "width": 800,
+    "height": 600,
+    "bytes": 64062
+  },
+  {
+    "name": "gallery-2",
+    "source": "https://kal.kerala.gov.in/storage/uploads/photos/177563828324.jpg",
+    "width": 900,
+    "height": 591,
+    "bytes": 111134
+  },
+  {
+    "name": "gallery-3",
+    "source": "https://kal.kerala.gov.in/storage/uploads/photos/175585585944.jpg",
+    "width": 800,
+    "height": 600,
+    "bytes": 50036
+  },
+  {
+    "name": "gallery-4",
+    "source": "https://kal.kerala.gov.in/storage/uploads/photos/175109406694.jpg",
+    "width": 800,
+    "height": 600,
+    "bytes": 43084
+  },
+  {
+    "name": "gallery-5",
+    "source": "https://kal.kerala.gov.in/storage/uploads/photos/175585585937.jpg",
+    "width": 800,
+    "height": 600,
+    "bytes": 45360
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "name": "kal-website-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "node scripts/generate-pages.mjs",
+    "predev": "npm run generate",
+    "dev": "vite --host 127.0.0.1",
+    "prebuild": "npm run generate",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "check": "node scripts/check-build.mjs",
+    "format": "prettier --write src scripts *.js *.json README.md audit/AUDIT.md"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.9",
+    "sharp": "0.34.5",
+    "vite": "8.3.2"
+  }
+}
