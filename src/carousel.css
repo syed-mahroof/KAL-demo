@@ -9,6 +9,18 @@
 .hero-slide {
   position: relative;
   min-height: 550px;
+  grid-area: 1 / 1;
+  min-width: 0;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 0.8s ease,
+    visibility 0.8s;
+}
+.hero-slide[aria-hidden="true"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 .hero-slide > picture {
   position: absolute;
@@ -28,13 +40,11 @@
 .hero-slide .hero-product {
   bottom: 40px;
 }
-.hero-slide:not([hidden]) .hero-image {
-  animation: hero-photo-in 0.9s ease both;
-}
-.hero-slide:not([hidden]) .hero-copy {
+.hero-slide[data-active] .hero-copy {
   animation: hero-copy-in 0.65s ease both;
 }
 .hero-slides {
+  display: grid;
   touch-action: pan-y;
 }
 .hero-motion-toggle {
@@ -61,14 +71,6 @@
   border-radius: 4px;
   font-size: 0.85rem;
   z-index: 2;
-}
-@keyframes hero-photo-in {
-  from {
-    opacity: 0.55;
-  }
-  to {
-    opacity: 1;
-  }
 }
 @keyframes hero-copy-in {
   from {
@@ -185,8 +187,10 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-slide:not([hidden]) .hero-image,
-  .hero-slide:not([hidden]) .hero-copy {
+  .hero-slide {
+    transition: none;
+  }
+  .hero-slide[data-active] .hero-copy {
     animation: none;
   }
 }
