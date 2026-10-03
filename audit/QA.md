@@ -8,9 +8,11 @@ Verified against the local refinement and subsequent visual polish on 3 October 
 
 ## Browser checks
 
+The optional `scripts/check-slide.mjs` also passes at 390 and 1440 px. It measures incoming and outgoing scenes moving in opposite horizontal directions, verifies unchanged stage height, reverses an in-flight transition, checks backward wraparound, and confirms changing to reduced motion cancels animation immediately.
+
 The follow-up mobile pass removes viewport-driven hero height on stacked layouts. Regression checks now assert that support sits within 80 px of each scene's actions, changing a phone's height to 1200 px does not stretch the hero, and utility links share a vertical center. Mobile top-bar text and enlarged text wrap without overflow. Small section text and footer links have increased size and spacing.
 
-The optional `scripts/check-browser.mjs` passes all 16 checks against the production preview using headless Chromium and the existing Playwright installation. No console errors or page errors were recorded. `browser-results.json` records the final results.
+The optional `scripts/check-browser.mjs` passes all 16 checks against the production preview using headless Chromium and the existing Playwright installation. No console errors or page errors were recorded. `browser-results.json` records the final results. The carousel follow-up checks normal autoplay with the pointer over imagery, pause over an action, and stable scene geometry after horizontal transitions.
 
 - All 18 routes pass horizontal overflow and landmark checks at 320, 375, 390, 768, 1024 and 1440 px: 108 viewport/route combinations.
 - All 17 content routes pass 200% text enlargement at 320 and 1440 px: 34 combinations. The A+ control is available on mobile.

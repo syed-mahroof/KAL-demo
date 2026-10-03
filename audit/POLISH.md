@@ -4,6 +4,8 @@ Reviewed 3 October 2026, following the user's request to hide the carousel and h
 
 ## Decisions
 
+- Carousel follow-up: the complete hero scene now moves horizontally over 850 ms rather than crossfading. Forward, backward and wraparound changes share the same stage and image framing. Normal pointer placement over the photograph no longer stops autoplay; hovering an actionable link or button pauses it. Keyboard focus, explicit pause/resume, offscreen and hidden-tab protections remain. Reduced motion uses immediate manual changes and disables autoplay; changing that preference cancels any running transition.
+
 - Follow-up mobile refinement: the utility bar uses consistent readable text sizes and centered link alignment, with wrapping at 200% text. Mobile and tablet heroes follow their content instead of filling the viewport; support sits in normal flow below the shared slide stage. The stage still reserves the tallest scene to avoid movement during rotation. Small body text in resources, capabilities, FAQs and the footer is enlarged, and footer links have more usable spacing. Desktop hero framing remains unchanged.
 
 - The desktop homepage identity and navigation now sit over the authentic vehicle scene. The utility bar retains government affiliation, language access, text enlargement and the concept label. Navigation becomes a solid navy strip as the page scrolls. Supporting pages retain their white government masthead.

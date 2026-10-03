@@ -9,6 +9,7 @@
 .hero-slides {
   display: grid;
   touch-action: pan-y;
+  overflow: clip;
 }
 .hero-slide {
   position: relative;
@@ -16,13 +17,15 @@
   min-width: 0;
   opacity: 1;
   visibility: visible;
-  transition:
-    opacity 800ms ease,
-    visibility 800ms;
 }
 .hero-slide[aria-hidden="true"] {
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
+}
+.hero-slide[data-leaving] {
+  opacity: 1;
+  visibility: visible;
   pointer-events: none;
 }
 .hero-slide > picture {
@@ -34,11 +37,6 @@
 .hero-slide .hero-image {
   object-fit: cover;
   object-position: 90% center;
-  transform: scale(1);
-  transition: transform 850ms cubic-bezier(0.2, 0.65, 0.3, 1);
-}
-.hero-slide[aria-hidden="true"] .hero-image {
-  transform: scale(1.01);
 }
 .hero-slide .hero-shade {
   background:
@@ -77,24 +75,6 @@
 }
 .hero-slide .hero-product {
   bottom: 2rem;
-}
-.hero-copy > * {
-  transition:
-    opacity 650ms ease,
-    transform 750ms cubic-bezier(0.2, 0.65, 0.3, 1);
-}
-.hero-slide[aria-hidden="true"] .hero-copy > * {
-  opacity: 0;
-  transform: translateY(10px);
-}
-.hero-slide[data-active] .hero-copy > :nth-child(2) {
-  transition-delay: 70ms;
-}
-.hero-slide[data-active] .hero-copy > :nth-child(3) {
-  transition-delay: 120ms;
-}
-.hero-slide[data-active] .hero-copy > :nth-child(4) {
-  transition-delay: 170ms;
 }
 .hero-controls {
   position: absolute;

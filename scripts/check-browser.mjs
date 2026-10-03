@@ -416,6 +416,15 @@ await check(
               .hasAttribute("data-active"),
           i,
         );
+        if (i) {
+          await page.locator(".hero-slides").evaluate(async (el) => {
+            await Promise.all(
+              el
+                .getAnimations({ subtree: true })
+                .map((animation) => animation.finished.catch(() => {})),
+            );
+          });
+        }
         assert.equal(
           await page
             .locator(".hero-carousel")
@@ -473,7 +482,7 @@ await check(
   },
 );
 await check(
-  "Autoplay, hover, persistent focus/manual pause, swipe and explicit resume",
+  "Autoplay over imagery, action hover, persistent focus/manual pause, swipe and explicit resume",
   async () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await go();
@@ -488,13 +497,22 @@ await check(
       "",
     );
     await page.mouse.move(700, 500);
+    await page.clock.runFor(7100);
+    await page.waitForFunction(() =>
+      document.querySelector('[data-slide="2"]').hasAttribute("data-active"),
+    );
+    await page.locator("[data-active] .hero-actions .button").hover();
     await page.clock.runFor(15000);
     assert.equal(
       await page.locator("[data-active]").getAttribute("data-slide"),
-      "1",
+      "2",
     );
     await page.mouse.move(0, 0);
     await page.locator(".hero-carousel").focus();
+    await page.keyboard.press("ArrowLeft");
+    await page.waitForFunction(() =>
+      document.querySelector('[data-slide="1"]').hasAttribute("data-active"),
+    );
     await page.locator(".search-open").focus();
     await page.clock.runFor(15000);
     assert.equal(

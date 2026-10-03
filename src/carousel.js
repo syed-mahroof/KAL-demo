@@ -9,6 +9,7 @@ if (carousel) {
   let current = 0,
     timer,
     request = 0,
+    transitions = [],
     gesture,
     pauseIntent;
   let paused = reducedMotion.matches,
@@ -78,6 +79,12 @@ if (carousel) {
       (paused || reducedMotion.matches || !inView || hovered || document.hidden)
     )
       return;
+    const previous = slides[current];
+    const direction = index > current ? 1 : -1;
+    transitions.forEach((animation) => animation.cancel());
+    transitions = [];
+    slides.forEach((item) => item.removeAttribute("data-leaving"));
+    const changed = next !== current;
     current = next;
     motionTiming.hero = Date.now();
     slides.forEach((item, i) => {
@@ -85,6 +92,34 @@ if (carousel) {
       item.setAttribute("aria-hidden", String(i !== current));
       item.toggleAttribute("data-active", i === current);
     });
+    if (changed && !reducedMotion.matches) {
+      previous.setAttribute("data-leaving", "");
+      const options = {
+        duration: 850,
+        easing: "cubic-bezier(0.22, 0.61, 0.36, 1)",
+      };
+      transitions = [
+        previous.animate(
+          [
+            { transform: "translateX(0)" },
+            { transform: `translateX(${-direction * 100}%)` },
+          ],
+          options,
+        ),
+        slide.animate(
+          [
+            { transform: `translateX(${direction * 100}%)` },
+            { transform: "translateX(0)" },
+          ],
+          options,
+        ),
+      ];
+      Promise.all(transitions.map((animation) => animation.finished))
+        .then(() => {
+          if (token === request) previous.removeAttribute("data-leaving");
+        })
+        .catch(() => {});
+    }
     if (manual) status.textContent = slide.getAttribute("aria-label");
     schedule();
   }
@@ -99,15 +134,19 @@ if (carousel) {
     pauseIntent = undefined;
   });
   carousel.addEventListener("focusin", () => setPaused(true));
-  carousel.addEventListener("pointerenter", (event) => {
+  carousel.addEventListener("pointerover", (event) => {
     if (event.pointerType === "mouse") {
-      hovered = true;
+      hovered = Boolean(event.target.closest("a,button"));
       schedule();
     }
   });
-  carousel.addEventListener("pointerleave", (event) => {
+  carousel.addEventListener("pointerout", (event) => {
     if (event.pointerType === "mouse") {
-      hovered = false;
+      hovered = Boolean(
+        event.relatedTarget?.closest?.(
+          ".hero-carousel a,.hero-carousel button",
+        ),
+      );
       schedule();
     }
   });
@@ -136,7 +175,12 @@ if (carousel) {
     schedule();
   });
   document.addEventListener("visibilitychange", schedule);
-  reducedMotion.addEventListener("change", () => setPaused(true));
+  reducedMotion.addEventListener("change", () => {
+    transitions.forEach((animation) => animation.cancel());
+    transitions = [];
+    slides.forEach((slide) => slide.removeAttribute("data-leaving"));
+    setPaused(true);
+  });
   if ("IntersectionObserver" in window)
     new IntersectionObserver(
       ([entry]) => {
