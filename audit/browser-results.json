@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-03",
+  "checks": [
+    "Viewport and route matrix",
+    "Single-row filters, category query and accessible legend",
+    "Mobile menu, grouping, Escape and focus restoration",
+    "Search, empty result, Escape and focus restoration",
+    "Gallery enlargement and dismissal",
+    "Enquiry preselection, validation and local draft only",
+    "200% text across all routes at 320 and 1440",
+    "Hero slide geometry, controls and image framing",
+    "Autoplay, hover, persistent focus/manual pause, swipe and explicit resume",
+    "Trust rotation, stable slots, unique items, offscreen pause and user pause",
+    "Offscreen hero and simulated hidden-tab pause",
+    "Reduced motion disables both rotations",
+    "Official notice and nine detail specifications",
+    "Static first slide without JavaScript",
+    "Representative screenshots"
+  ],
+  "failures": [],
+  "errors": []
+}

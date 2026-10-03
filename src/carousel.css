@@ -1,21 +1,24 @@
-/* Original KAL photography, with matching vehicle framing on small screens. */
-.hero-carousel {
-  position: relative;
+/* The same reserved stage holds every slide, including when text grows. */
+.hero.hero-carousel {
+  min-height: 0;
 }
 .hero-carousel:focus-visible {
-  outline: 3px solid #bd7917;
-  outline-offset: -3px;
+  outline: 3px solid #d5a147;
+  outline-offset: -4px;
+}
+.hero-slides {
+  display: grid;
+  touch-action: pan-y;
 }
 .hero-slide {
   position: relative;
-  min-height: 550px;
   grid-area: 1 / 1;
   min-width: 0;
-  opacity: 1;
   visibility: visible;
+  opacity: 1;
   transition:
-    opacity 0.8s ease,
-    visibility 0.8s;
+    opacity 800ms ease,
+    visibility 800ms;
 }
 .hero-slide[aria-hidden="true"] {
   opacity: 0;
@@ -25,103 +28,188 @@
 .hero-slide > picture {
   position: absolute;
   inset: 0;
+  overflow: hidden;
+  background: #143845;
+}
+.hero-slide .hero-image {
+  object-fit: cover;
+  object-position: 70% center;
+  transform: scale(1);
+  transition: transform 850ms cubic-bezier(0.2, 0.65, 0.3, 1);
+}
+.hero-slide[aria-hidden="true"] .hero-image {
+  transform: scale(1.015);
+}
+.hero-slide .hero-shade {
+  background:
+    linear-gradient(
+      90deg,
+      #06202bef,
+      #06202bba 26%,
+      #06202b38 52%,
+      transparent 75%
+    ),
+    linear-gradient(0deg, #06202bcc, transparent 23%);
 }
 .hero-slide .hero-inner {
-  min-height: 550px;
-  padding-block: 66px 76px;
+  min-height: max(34rem, calc(100svh - var(--header-height, 197px)));
+  padding-block: 4rem 7.5rem;
+}
+.hero-slide .hero-copy {
+  max-width: 32rem;
 }
 .hero-slide h2 {
   color: white;
-  font-size: 3.8rem;
-  line-height: 1.12;
+  font-size: clamp(2.8rem, 4.5vw, 4.25rem);
+  line-height: 1.09;
   font-weight: 600;
   letter-spacing: -0.045em;
 }
+.hero-slide .hero-copy > p {
+  max-width: 26rem;
+}
+.hero-slide .hero-actions {
+  flex-wrap: wrap;
+}
 .hero-slide .hero-product {
-  bottom: 40px;
+  bottom: 2.4rem;
 }
-.hero-slide[data-active] .hero-copy {
-  animation: hero-copy-in 0.65s ease both;
+.hero-copy > * {
+  transition:
+    opacity 650ms ease,
+    transform 750ms cubic-bezier(0.2, 0.65, 0.3, 1);
 }
-.hero-slides {
-  display: grid;
-  touch-action: pan-y;
+.hero-slide[aria-hidden="true"] .hero-copy > * {
+  opacity: 0;
+  transform: translateY(12px);
 }
-.hero-motion-toggle {
+.hero-slide[data-active] .hero-copy > :nth-child(2) {
+  transition-delay: 70ms;
+}
+.hero-slide[data-active] .hero-copy > :nth-child(3) {
+  transition-delay: 120ms;
+}
+.hero-slide[data-active] .hero-copy > :nth-child(4) {
+  transition-delay: 170ms;
+}
+.hero-controls {
   position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  border: 0;
+  bottom: 1.65rem;
+  inset-inline: 0;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  z-index: 1;
+  pointer-events: none;
 }
-.hero-motion-toggle:focus-visible {
-  clip-path: none;
-  width: auto;
-  height: auto;
-  bottom: 20px;
-  right: 20px;
-  padding: 10px 18px;
-  margin: 0;
+.hero-controls button {
+  pointer-events: auto;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #0a2b3ae6;
+  color: white;
+  border: 1px solid #8ca8b3;
+  border-radius: 3px;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+.hero-controls button:hover {
   background: white;
   color: var(--navy);
-  border: 1px solid white;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  z-index: 2;
 }
-@keyframes hero-copy-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+.hero-controls button:focus-visible {
+  outline-color: #f4cc7b;
+  outline-offset: 3px;
+}
+.hero-controls svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.hero-navigation,
+.hero-positions {
+  display: flex;
+  gap: 5px;
+}
+.hero-positions button {
+  border-color: transparent;
+  background: transparent;
+  font-variant-numeric: tabular-nums;
+  border-bottom: 2px solid #829eaa;
+  border-radius: 0;
+}
+.hero-positions button[aria-pressed="true"] {
+  border-bottom-color: white;
+  background: #ffffff15;
+}
+.hero-positions button:hover {
+  background: white;
+  color: var(--navy);
+}
+.hero-controls .hero-motion-toggle {
+  width: auto;
+  height: auto;
+  margin: 0;
+  clip-path: none;
+  overflow: visible;
+  gap: 8px;
+  padding-inline: 12px;
+}
+.hero-motion-toggle:disabled {
+  opacity: 0.85;
+}
+@media (min-width: 1101px) and (min-aspect-ratio: 2.3/1) {
+  .hero-slide .hero-image {
+    object-fit: contain;
+    object-position: right center;
   }
 }
-@media (min-width: 1600px) {
-  .hero-slide,
-  .hero-slide .hero-inner {
-    min-height: 600px;
+@media (max-width: 1100px) and (min-width: 701px) {
+  .hero-slide .hero-copy {
+    max-width: 25rem;
   }
   .hero-slide h2 {
-    font-size: 4rem;
+    font-size: 2.8rem;
   }
-}
-@media (max-width: 1000px) {
-  .hero-slide,
-  .hero-slide .hero-inner {
-    min-height: 530px;
+  .hero-slide .hero-copy > p {
+    max-width: 21rem;
   }
-  .hero-slide h2 {
-    font-size: 3.1rem;
+  .hero-slide .hero-image {
+    object-fit: contain;
+    object-position: right center;
+  }
+  .hero-slide .hero-shade {
+    background: linear-gradient(
+      90deg,
+      #06202bf5,
+      #06202bc7 30%,
+      #06202b25 64%,
+      transparent
+    );
+  }
+  .hero-slide .hero-product {
+    display: none;
   }
 }
 @media (max-width: 700px) {
-  .hero-carousel {
-    min-height: 0;
-  }
-  .hero-slide {
-    min-height: 0;
-  }
   .hero-slide > picture {
-    position: absolute;
-    display: block;
     inset: 0 0 auto;
     height: auto;
-    background: var(--navy);
+    aspect-ratio: 4 / 3;
   }
   .hero-slide .hero-image {
     width: 100%;
-    height: auto;
+    height: 100%;
     object-fit: contain;
     object-position: center top;
-  }
-  .hero-slide .hero-shade {
-    display: none;
   }
   .hero-slide > picture::after {
     content: "";
@@ -129,16 +217,18 @@
     inset: 0;
     background: linear-gradient(
       180deg,
-      transparent 73%,
-      #0b334520 81%,
-      #0b3345b3 92%,
-      var(--navy) 100%
+      transparent 65%,
+      #0b334500 72%,
+      var(--navy)
     );
   }
+  .hero-slide .hero-shade {
+    display: none;
+  }
   .hero-slide .hero-inner {
-    min-height: 625px;
-    padding-top: calc(75vw - 15px);
-    padding-bottom: 36px;
+    min-height: max(39rem, calc(100svh - var(--header-height, 140px)));
+    padding-top: calc(75vw - 1rem);
+    padding-bottom: 8.75rem;
     align-items: flex-start;
   }
   .hero-slide .hero-copy {
@@ -146,51 +236,52 @@
     max-width: none;
   }
   .hero-slide h2 {
-    font-size: clamp(2rem, 9.2vw, 2.55rem);
-    line-height: 1.15;
+    font-size: clamp(2rem, 8.4vw, 3.4rem);
+    line-height: 1.12;
   }
   .hero-slide .hero-eyebrow {
-    font-size: 0.7rem;
-    margin-bottom: 13px;
+    font-size: 0.72rem;
+    margin-bottom: 1rem;
   }
   .hero-slide .hero-copy > p {
-    font-size: 0.96rem;
-    margin-top: 16px;
-    line-height: 1.8;
-    max-width: none;
-    color: #dfebef;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    max-width: 36rem;
+    margin-top: 1rem;
   }
   .hero-slide .hero-actions {
-    margin-top: 25px;
-    gap: 18px;
+    margin-top: 1.4rem;
+    gap: 0.6rem 1.25rem;
   }
-  .hero-slide .hero-actions > .button {
-    padding: 11px 15px;
-    font-size: 0.8rem;
-    min-height: 46px;
-  }
+  .hero-slide .hero-actions .button,
   .hero-slide .hero-about {
-    font-size: 0.78rem;
-    gap: 7px;
+    font-size: 0.82rem;
+    min-height: 44px;
   }
-}
-@media (max-width: 370px) {
-  .hero-slide .hero-inner {
-    min-height: 612px;
+  .hero-slide .hero-product {
+    display: none;
   }
-  .hero-slide .hero-actions {
+  .hero-controls {
+    bottom: 1.1rem;
+    gap: 0.6rem;
     flex-wrap: wrap;
-    gap: 13px;
   }
-  .hero-slide .hero-about {
-    font-size: 0.77rem;
+  .hero-controls .hero-motion-toggle {
+    font-size: 0.72rem;
+  }
+  .hero-navigation,
+  .hero-positions {
+    gap: 2px;
+  }
+  .hero-controls button {
+    min-width: 44px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-slide {
+  .hero-slide,
+  .hero-copy > *,
+  .hero-slide .hero-image {
     transition: none;
-  }
-  .hero-slide[data-active] .hero-copy {
-    animation: none;
+    transform: none !important;
   }
 }

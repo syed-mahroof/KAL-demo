@@ -39,6 +39,8 @@ The preview deliberately uses `noindex, nofollow` in HTML and response headers, 
 - Nine vehicle detail pages, with original images and published specifications.
 - Vehicle category filters, site search with empty states, keyboard-friendly menus and FAQs.
 - Gallery enlargement, text enlargement, visible focus indicators and reduced-motion support.
+- Visible hero navigation and pause controls, persistent pause after focus/manual input, and three rotating heritage/benefit slots.
+- Single-row scrolling vehicle filters, icon specifications with an accessible legend, and government/board leadership previews.
 - Validated enquiry form with a local preview, downloadable text draft and optional email-app draft.
 - Mobile navigation and responsive layouts, with local images and fonts.
 
@@ -61,6 +63,10 @@ The enquiry form sends nothing and stores nothing. “Open email draft” opens 
 | `audit/asset-sources.json`   | Original asset URLs                                        |
 
 Generated HTML files are build inputs. Edit `src/` rather than the generated pages, then run `npm run generate` to refresh the local preview. Vite updates client JavaScript and CSS automatically; template changes require regeneration.
+
+The refinement research and verification are recorded in [audit/REFINEMENT.md](audit/REFINEMENT.md) and [audit/QA.md](audit/QA.md). Representative screenshots are in `audit/screenshots/refinement/`.
+
+For optional browser regression checks, run `npm run preview` after building, then `node scripts/check-browser.mjs`. This uses an existing Playwright installation rather than adding it to the project's dependencies. If it is installed elsewhere, set `PLAYWRIGHT_MODULE` to its absolute `index.mjs` path; set `BROWSER_EXECUTABLE` when an existing Chromium executable must be selected. `PREVIEW_URL` defaults to `http://127.0.0.1:4173`. Results are written to `audit/browser-results.json`.
 
 ## Production SEO handover
 

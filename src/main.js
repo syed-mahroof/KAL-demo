@@ -1,32 +1,78 @@
 import { searchItems } from "./data.mjs";
 import "./carousel.js";
+import "./trust.js";
 
 const header = document.querySelector(".site-header");
 const menuToggle = document.querySelector(".menu-toggle");
-menuToggle?.addEventListener("click", () => {
-  const expanded = menuToggle.getAttribute("aria-expanded") !== "true";
+function setMenu(expanded, restoreFocus = false) {
   menuToggle.setAttribute("aria-expanded", String(expanded));
   menuToggle.setAttribute(
     "aria-label",
     expanded ? "Close navigation" : "Open navigation",
   );
   header.classList.toggle("menu-open", expanded);
+  if (expanded) header.querySelector("#primary-nav > a")?.focus();
+  else {
+    header
+      .querySelectorAll(".nav-dropdown[open]")
+      .forEach((dropdown) => (dropdown.open = false));
+    if (restoreFocus) menuToggle.focus();
+  }
+}
+menuToggle?.addEventListener("click", () =>
+  setMenu(menuToggle.getAttribute("aria-expanded") !== "true"),
+);
+header.addEventListener("focusout", (event) => {
+  if (
+    header.classList.contains("menu-open") &&
+    !header.contains(event.relatedTarget)
+  )
+    setMenu(false);
 });
+const headerParts = [
+  document.querySelector(".utility-bar"),
+  header.querySelector(".masthead"),
+];
+function measureHeader() {
+  const mobile = getComputedStyle(menuToggle).display !== "none";
+  const mastheadHeight = headerParts[1].getBoundingClientRect().height;
+  document.documentElement.style.setProperty(
+    "--masthead-height",
+    `${mastheadHeight}px`,
+  );
+  const height =
+    headerParts.reduce(
+      (sum, part) => sum + part.getBoundingClientRect().height,
+      0,
+    ) +
+    (mobile
+      ? 0
+      : header.querySelector(".nav-wrap").getBoundingClientRect().height);
+  document.documentElement.style.setProperty("--header-height", `${height}px`);
+}
+new ResizeObserver(measureHeader).observe(header);
+new ResizeObserver(measureHeader).observe(headerParts[0]);
+window.addEventListener("resize", () => {
+  measureHeader();
+  if (getComputedStyle(menuToggle).display === "none") setMenu(false);
+});
+measureHeader();
 document.addEventListener("click", (event) => {
+  if (header.classList.contains("menu-open") && !header.contains(event.target))
+    setMenu(false);
   document.querySelectorAll(".nav-dropdown[open]").forEach((dropdown) => {
     if (!dropdown.contains(event.target)) dropdown.open = false;
   });
 });
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
-  document
-    .querySelectorAll(".nav-dropdown[open]")
-    .forEach((dropdown) => (dropdown.open = false));
+  document.querySelectorAll(".nav-dropdown[open]").forEach((dropdown) => {
+    dropdown.open = false;
+    if (dropdown.contains(document.activeElement))
+      dropdown.querySelector("summary").focus();
+  });
   if (header.classList.contains("menu-open")) {
-    header.classList.remove("menu-open");
-    menuToggle.setAttribute("aria-expanded", "false");
-    menuToggle.setAttribute("aria-label", "Open navigation");
-    menuToggle.focus();
+    setMenu(false, true);
   }
 });
 const textControl = document.querySelector("[data-text-size]");
@@ -54,7 +100,33 @@ document.querySelectorAll("[data-filter]").forEach((button) => {
     });
     section.querySelector(".filter-status").textContent =
       `${count} ${count === 1 ? "vehicle" : "vehicles"} shown.`;
+    const strip = button.closest(".filters");
+    const bounds = button.getBoundingClientRect(),
+      stripBounds = strip.getBoundingClientRect();
+    if (bounds.left < stripBounds.left || bounds.right > stripBounds.right) {
+      strip.scrollTo({
+        left:
+          button.offsetLeft -
+          strip.offsetLeft -
+          (strip.clientWidth - button.offsetWidth) / 2,
+        behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "instant"
+          : "smooth",
+      });
+    }
   });
+});
+document.querySelectorAll(".filters").forEach((strip) => {
+  const updateCue = () => {
+    strip.parentElement.classList.toggle("more-start", strip.scrollLeft > 2);
+    strip.parentElement.classList.toggle(
+      "more-end",
+      strip.scrollLeft + strip.clientWidth < strip.scrollWidth - 2,
+    );
+  };
+  strip.addEventListener("scroll", updateCue, { passive: true });
+  new ResizeObserver(updateCue).observe(strip);
+  updateCue();
 });
 const initialCategory = new URLSearchParams(location.search).get("category");
 if (["passenger", "goods", "utility"].includes(initialCategory)) {
@@ -65,6 +137,7 @@ const searchDialog = document.querySelector(".search-dialog");
 const searchInput = document.querySelector("#site-search");
 const searchResults = document.querySelector(".search-results");
 const searchStatus = document.querySelector(".search-status");
+let searchOpener;
 function renderSearch() {
   const query = searchInput.value.trim().toLocaleLowerCase();
   const results = searchItems.filter((item) =>
@@ -88,9 +161,18 @@ function renderSearch() {
     : "No results. Try “electric”, “contact” or “tenders”.";
 }
 document.querySelector(".search-open")?.addEventListener("click", () => {
+  searchOpener = document.querySelector(".search-open");
   searchDialog.showModal();
   renderSearch();
   searchInput.focus();
+});
+searchDialog?.addEventListener("close", () => searchOpener?.focus());
+searchDialog?.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    event.preventDefault();
+    event.stopPropagation();
+    searchDialog.close();
+  }
 });
 searchInput?.addEventListener("input", renderSearch);
 document

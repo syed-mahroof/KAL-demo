@@ -3,8 +3,8 @@ const slides = [
     image: "hero-neem",
     alt: "Blue Kerala Neem G electric passenger three-wheeler, shown in full",
     eyebrow: "Made in Kerala. Moving forward.",
-    title: "Kerala Automobiles<br>Limited",
-    copy: "Electric mobility for our communities. Precision engineering for India’s space programmes. Kerala’s own, since 1978.",
+    title: "Kerala’s own.<br>Electric by design.",
+    copy: "Passenger journeys, local deliveries and public service. Electric vehicles built in Kerala, for the work of every day.",
     button: "Discover our vehicles",
     link: "/products/",
     secondary: "Get to know KAL",
@@ -57,8 +57,8 @@ export function heroCarousel() {
       </h1>
       <p class="sr-only" id="carousel-instructions">
         Use left and right arrow keys to browse the vehicle showcase. Focusing
-        the showcase pauses automatic rotation. Rotation resumes when focus
-        leaves. On touch screens, swipe left or right to change vehicles.
+        the showcase pauses automatic rotation until you choose Resume. On touch
+        screens, swipe left or right to change vehicles.
       </p>
       <div class="hero-slides">
         ${slides
@@ -75,15 +75,15 @@ export function heroCarousel() {
                 <picture>
                   <source
                     media="(max-width: 700px)"
-                    srcset="/images/${slide.image}-mobile.webp"
+                    ${index ? "data-srcset" : "srcset"}="/images/${slide.image}-mobile.webp"
                   />
                   <source
                     media="(max-width: 1100px)"
-                    srcset="/images/${slide.image}-small.webp"
+                    ${index ? "data-srcset" : "srcset"}="/images/${slide.image}-small.webp"
                   />
                   <img
                     class="hero-image"
-                    src="/images/${slide.image}.webp"
+                    ${index ? "data-src" : "src"}="/images/${slide.image}.webp"
                     alt="${slide.alt}"
                     width="1840"
                     height="884"
@@ -118,15 +118,43 @@ export function heroCarousel() {
           )
           .join("")}
       </div>
-      <button
-        class="hero-motion-toggle"
-        data-carousel-pause
-        aria-pressed="false"
-        hidden
-      >
-        Pause slideshow
-      </button>
-      <p class="sr-only" data-carousel-status role="status" aria-live="off"></p>
+      <div class="container hero-controls" hidden>
+        <div class="hero-navigation">
+          <button data-carousel-prev aria-label="Previous vehicle">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m14 6-6 6 6 6" />
+            </svg>
+          </button>
+          <div
+            class="hero-positions"
+            role="group"
+            aria-label="Choose a vehicle slide"
+          >
+            ${slides.map((slide, i) => `<button data-carousel-position="${i}" aria-label="Slide 0${i + 1}: ${slide.label}" aria-pressed="${i === 0}"><span aria-hidden="true">0${i + 1}</span></button>`).join("")}
+          </div>
+          <button data-carousel-next aria-label="Next vehicle">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m10 6 6 6-6 6" />
+            </svg>
+          </button>
+        </div>
+        <button
+          class="hero-motion-toggle"
+          data-carousel-pause
+          aria-pressed="false"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path data-motion-symbol d="M8 5v14M16 5v14" /></svg
+          ><span>Pause slideshow</span>
+        </button>
+      </div>
+      <p
+        class="sr-only"
+        data-carousel-status
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      ></p>
     </section>
   `;
 }

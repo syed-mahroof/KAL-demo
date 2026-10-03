@@ -1,4 +1,4 @@
-import { products, official, galleryPhotos } from "./data.mjs";
+import { products, official, galleryPhotos, boardLeaders } from "./data.mjs";
 import {
   image,
   icon,
@@ -9,6 +9,9 @@ import {
   productCard,
   escape,
   faq,
+  publicStewardship,
+  leaderCard,
+  updatesSection,
 } from "./templates.mjs";
 
 export function about() {
@@ -42,40 +45,17 @@ export function about() {
         ${timeline}
       </div>
     </section>
+    ${publicStewardship()}
     <section class="section leadership-section" id="leadership">
       <div class="container">
         <div class="section-heading">
           <div>
             <span class="eyebrow">Public stewardship</span>
-            <h2>Our leadership.</h2>
+            <h2>Our board of directors.</h2>
           </div>
           ${external("/board-of-directors", "View official board information", "text-link")}
         </div>
-        <div class="leaders">
-          <article class="leader">
-            ${image("managing-director", "V. S. Rajeev, Managing Director of KAL")}
-            <div>
-              <h3>V. S. Rajeev</h3>
-              <p>Managing Director</p>
-            </div>
-          </article>
-          <article class="leader">
-            ${image("director-finance", "Jayalakshmi T. M.")}
-            <div>
-              <h3>Jayalakshmi T. M.</h3>
-              <p>Joint Secretary, Finance Department, Government of Kerala</p>
-            </div>
-          </article>
-          <article class="leader">
-            ${image("director-industries", "Ajith Kumar A.")}
-            <div>
-              <h3>Ajith Kumar A.</h3>
-              <p>
-                Under Secretary, Industries Department, Government of Kerala
-              </p>
-            </div>
-          </article>
-        </div>
+        <div class="leaders">${boardLeaders.map(leaderCard).join("")}</div>
         <p class="leadership-note">
           Leadership information follows KAL’s current website. Refer to the
           <a
@@ -88,7 +68,7 @@ export function about() {
         </p>
       </div>
     </section>
-    <section class="section">
+    <section class="section" id="purpose">
       <div class="container engineering-grid">
         <div>
           <span class="eyebrow">Our purpose</span>
@@ -320,6 +300,11 @@ export function publicInformation() {
       "Dealer network",
       "Find current KAL dealer information.",
     ],
+    [
+      "/downloads",
+      "Downloads",
+      "Access documents published by Kerala Automobiles Limited.",
+    ],
   ];
   return /* HTML */ `${pageHero("Public information", "Clear information.<br>Easy access.", "Find tenders, statutory disclosures, government orders and public resources in one place.")}
     <section class="section">
@@ -347,41 +332,7 @@ export function publicInformation() {
     </section>`;
 }
 export function news() {
-  return /* HTML */ `${pageHero("News & careers", "Updates from KAL.", "Company announcements, recruitment notifications and official news.")}
-    <section class="section">
-      <div class="container">
-        <div class="news-list">
-          <article class="news-article">
-            <time class="news-date" datetime="2026-09-10"
-              ><strong>10</strong>September 2026</time
-            >
-            <div>
-              <span class="closed-badge"
-                >Applications closed · 17 September 2026</span
-              >
-              <h2>
-                Machine Shop: Junior Engineer, Engineer & Senior Engineer
-                recruitment
-              </h2>
-              <p>
-                Applications were invited for engineering positions in the
-                Machine Shop on a contract basis. The published application
-                deadline was 17 September 2026.
-              </p>
-              ${external("/news", "Read official notification", "text-link")}
-            </div>
-          </article>
-        </div>
-        <p class="info-note">
-          This demonstration reflects the notification available on KAL’s
-          website at the time of review. Check official pages for current
-          openings and deadlines.
-        </p>
-        <div class="news-resources">
-          ${external("/news", "All official news", "text-link")}${external("/careers", "Current career opportunities", "text-link")}${external("/tenders", "Tender notices", "text-link")}
-        </div>
-      </div>
-    </section>`;
+  return `${pageHero("News & careers", "Updates from KAL.", "Company announcements and recruitment notices, with direct access to official documents and current public information.")}${updatesSection()}`;
 }
 export function gallery() {
   return /* HTML */ `${pageHero("Photo gallery", "A glimpse of KAL.", "Photographs from Kerala Automobiles Limited’s current official gallery. Select a photograph to view it in full.")}
@@ -566,8 +517,8 @@ export function contact() {
         <p>
           This demonstration supports keyboard navigation, visible focus
           indicators, a skip link, readable text, responsive layouts and
-          reduced-motion preferences. Use the A+ control in the desktop header
-          to enlarge text.
+          reduced-motion preferences. Use the A+ control in the header to
+          enlarge text.
         </p>
         <p>
           For help accessing KAL information, contact

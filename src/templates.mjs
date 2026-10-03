@@ -1,4 +1,12 @@
-import { products, official, galleryPhotos } from "./data.mjs";
+import {
+  products,
+  official,
+  galleryPhotos,
+  governmentLeaders,
+  boardLeaders,
+  trustFacts,
+  recruitment,
+} from "./data.mjs";
 import { heroCarousel } from "./hero.mjs";
 
 export const escape = (value) =>
@@ -10,6 +18,16 @@ export const escape = (value) =>
       ],
   );
 const paths = {
+  ruler: '<path d="M3 8h18v8H3ZM7 8v4m4-4v3m4-3v4m4-4v3"/>',
+  weight: '<circle cx="12" cy="5" r="2"/><path d="M6 8h12l3 13H3Z"/>',
+  circuit:
+    '<rect x="7" y="7" width="10" height="10" rx="1"/><path d="M10 3v4m4-4v4m-4 10v4m4-4v4M3 10h4m-4 4h4m10-4h4m-4 4h4"/>',
+  range:
+    '<path d="M3 19a9 9 0 1 1 18 0ZM12 15l5-7M6 14l-2-1m5-5-1-2m8 2 1-2m1 8 2-1"/><circle cx="12" cy="15" r="1"/>',
+  plug: '<path d="M9 3v4m6-4v4M7 7h10v5a5 5 0 0 1-10 0Zm5 10v4"/>',
+  pause: '<path d="M8 5v14M16 5v14"/>',
+  quiet:
+    '<path d="m3 10 4 0 5-5v14l-5-5H3Zm13-1a5 5 0 0 1 0 6m3-9a9 9 0 0 1 0 12"/>',
   chevron: '<path d="m8 10 4 4 4-4"/>',
   search: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/>',
   phone:
@@ -62,7 +80,7 @@ function header(active) {
     </div>
     <header class="site-header">
       <div class="container masthead">
-        <a class="brand" href="/" aria-label="Kerala Automobiles Limited home"
+        <a class="brand" href="/"
           ><img
             src="/images/kerala-emblem.webp"
             alt="Government of Kerala emblem"
@@ -79,10 +97,14 @@ function header(active) {
           ></a
         >
         <div class="masthead-actions">
-          <span class="certification"
+          <a
+            class="certification"
+            href="${official}/certifications"
+            target="_blank"
+            rel="noopener noreferrer"
             >${icon("certificate")}<span
               >ISO 9001:2015<strong>Certified company</strong></span
-            ></span
+            ></a
           ><button class="icon-button search-open" aria-label="Search website">
             ${icon("search")}</button
           ><button
@@ -107,8 +129,10 @@ function header(active) {
               </summary>
               <div class="dropdown-panel">
                 <a href="/about/">Overview & history</a
-                ><a href="/about/#leadership">Leadership</a
-                ><a href="/manufacturing/">Manufacturing & aerospace</a
+                ><a href="/about/#government">Government affiliation</a
+                ><a href="/about/#leadership">Board of directors</a
+                ><a href="/about/#purpose">Electric transition</a
+                ><a href="/gallery/">Photo gallery</a
                 >${external("/certifications", "Certifications")}
               </div>
             </details>
@@ -120,17 +144,31 @@ function header(active) {
               href="/manufacturing/"
               ${active === "manufacturing" ? 'aria-current="page"' : ""}
               >Manufacturing</a
-            ><a
-              href="/public-information/"
-              ${active === "public" ? 'aria-current="page"' : ""}
-              >Public information</a
-            ><a href="/news/" ${active === "news" ? 'aria-current="page"' : ""}
-              >News & careers</a
-            ><a
-              href="/contact/"
-              ${active === "contact" ? 'aria-current="page"' : ""}
-              >Contact</a
             >
+            <details class="nav-dropdown">
+              <summary ${active === "public" ? 'class="current"' : ""}>
+                Public information ${icon("chevron")}
+              </summary>
+              <div class="dropdown-panel">
+                <a href="/public-information/">Public resource hub</a>
+                ${external("/tenders", "Tenders & procurement")}
+                ${external("/rti", "Right to Information")}
+                ${external("/mandatory-disclosures", "Mandatory disclosures")}
+                ${external("/government-orders", "Government orders")}
+                ${external("/downloads", "Downloads")}
+              </div>
+            </details>
+            ${`<a href="/news/"${active === "news" ? ' aria-current="page"' : ""}>News & careers</a>`}
+            <details class="nav-dropdown">
+              <summary ${active === "contact" ? 'class="current"' : ""}>
+                Contact ${icon("chevron")}
+              </summary>
+              <div class="dropdown-panel dropdown-right">
+                <a href="/contact/">Contact & support</a
+                ><a href="/contact/#enquiry">Vehicle enquiry</a
+                >${external("/dealer-details", "Dealer network")}
+              </div>
+            </details>
           </nav>
           <a class="button button-small" href="/contact/#enquiry"
             >Enquire now</a
@@ -291,12 +329,12 @@ export function productCard(product) {
       <p>${product.description}</p>
       <dl class="product-specs">
         <div>
-          <dt>Overall length</dt>
-          <dd>${product.length}</dd>
+          <dt class="sr-only">Overall length</dt>
+          <dd>${icon("ruler")}<span>${product.length}</span></dd>
         </div>
         <div>
-          <dt>Gross vehicle weight</dt>
-          <dd>${product.weight}</dd>
+          <dt class="sr-only">Gross vehicle weight</dt>
+          <dd>${icon("weight")}<span>${product.weight}</span></dd>
         </div>
       </dl>
       <a class="text-link" href="/products/${product.slug}/"
@@ -305,7 +343,7 @@ export function productCard(product) {
     </div>
   </article>`;
 }
-export const filters = `<div class="filters" role="group" aria-label="Filter vehicles"><button data-filter="all" aria-pressed="true">All vehicles</button><button data-filter="passenger" aria-pressed="false">Passenger</button><button data-filter="goods" aria-pressed="false">Goods transport</button><button data-filter="utility" aria-pressed="false">Utility</button></div>`;
+export const filters = `<div class="filter-wrap"><div class="filters" role="group" aria-label="Filter vehicles"><button data-filter="all" aria-pressed="true">All vehicles</button><button data-filter="passenger" aria-pressed="false">Passenger</button><button data-filter="goods" aria-pressed="false">Goods transport</button><button data-filter="utility" aria-pressed="false">Utility</button></div></div><details class="spec-legend"><summary>Specification icons explained</summary><div><span>${icon("ruler")}Overall length in millimetres</span><span>${icon("weight")}Gross vehicle weight in kilograms, including vehicle and its permitted load; not payload.</span></div></details>`;
 export function productSection(all = false) {
   return /* HTML */ `<section
     class="section products-section ${all ? "full-catalog" : ""}"
@@ -336,30 +374,46 @@ export function pageHero(label, title, description) {
     </div>
   </section>`;
 }
+export function leaderCard(person) {
+  return `<article class="leader">${image(person.image, person.name)}<div><h3>${person.name}</h3><p>${person.role}</p></div></article>`;
+}
+export function publicStewardship(preview = false) {
+  const people = preview
+    ? [...governmentLeaders, boardLeaders[0]]
+    : governmentLeaders;
+  return `<section class="section stewardship-section" id="government"><div class="container stewardship-grid"><div class="stewardship-intro"><span class="eyebrow">Public stewardship</span><h2>A Government of<br>Keralam undertaking.</h2><p>Kerala Automobiles Limited<br>Department of Industries & Commerce</p><a class="text-link" href="${preview ? "/about/#leadership" : official + "/board-of-directors"}" ${preview ? "" : 'target="_blank" rel="noopener noreferrer"'}>${preview ? "Meet our board" : "Official leadership information"} ${icon(preview ? "chevron" : "external")}</a></div><div class="stewardship-people ${preview ? "stewardship-preview" : ""}">${people.map(leaderCard).join("")}</div></div></section>`;
+}
+function trustContent(fact) {
+  return `${icon(fact.icon)}<span><strong>${fact.title}</strong><span>${fact.copy}</span></span>`;
+}
+function trustStrip() {
+  return `<section class="trust-strip" aria-label="KAL heritage and electric mobility benefits"><div class="container trust-panel"><div class="trust-grid">${trustFacts
+    .slice(0, 3)
+    .map(
+      (fact, i) =>
+        `<div class="trust-slot" data-trust-slot="${i}"><div class="trust-content">${trustContent(fact)}</div></div>`,
+    )
+    .join(
+      "",
+    )}</div><button class="trust-pause" data-trust-pause aria-pressed="false" hidden>${icon("pause")}<span>Pause highlights</span></button></div>${trustFacts.map((fact, i) => `<template data-trust-item="${i}">${trustContent(fact)}</template>`).join("")}</section>`;
+}
+export function updatesSection(homepage = false) {
+  const heading = homepage
+    ? `<div class="section-heading"><div><span class="eyebrow">News & notices</span><h2>From KAL’s noticeboard.</h2></div><a class="text-link" href="/news/">All updates <span aria-hidden="true">↗</span></a></div>`
+    : "";
+  return `<section class="section updates-section"><div class="container">${heading}<div class="updates-grid"><article class="featured-notice"><div class="notice-meta"><span>${recruitment.category}</span><time datetime="${recruitment.published}">10 September 2026</time></div><span class="closed-badge">Applications closed · 17 September 2026</span><${homepage ? "h3" : "h2"}>${recruitment.title}</${homepage ? "h3" : "h2"}><p>${recruitment.summary}</p><a class="text-link" href="${recruitment.document}" target="_blank" rel="noopener noreferrer">Read official notification ${icon("external")}</a><span class="document-meta">PDF · 2 pages · opens in a new tab</span></article><aside class="official-notices" aria-label="Official notice resources"><span class="eyebrow">Official resources</span><h3>Keep up to date.</h3><p>Check KAL’s official pages for current announcements and application deadlines.</p>${[
+    ["/news", "Company news", "Announcements from KAL"],
+    ["/careers", "Careers", "Current recruitment information"],
+    ["/tenders", "Tenders & procurement", "Published tender notices"],
+  ]
+    .map(
+      ([url, title, copy]) =>
+        `<a href="${official + url}" target="_blank" rel="noopener noreferrer"><span><strong>${title}</strong><span>${copy}</span></span>${icon("external")}</a>`,
+    )
+    .join("")}</aside></div></div></section>`;
+}
 export function home() {
-  return /* HTML */ `${heroCarousel()}
-    <section class="trust-strip" aria-label="KAL at a glance">
-      <div class="container trust-grid">
-        <div>
-          ${icon("gear")}<span
-            ><strong>Since 1978</strong
-            ><span>A legacy of Kerala engineering</span></span
-          >
-        </div>
-        <div>
-          ${icon("bolt")}<span
-            ><strong>All-electric mobility</strong
-            ><span>Passenger, cargo & utility vehicles</span></span
-          >
-        </div>
-        <div>
-          ${icon("certificate")}<span
-            ><strong>Precision manufacturing</strong
-            ><span>Supporting India’s space programmes</span></span
-          >
-        </div>
-      </div>
-    </section>
+  return /* HTML */ `${heroCarousel()} ${trustStrip()}
     <div class="notice-band">
       <div class="container notice-inner">
         <span class="notice-title">${icon("document")}Noticeboard</span>
@@ -404,6 +458,7 @@ export function home() {
         </div>
       </div>
     </section>
+    ${publicStewardship(true)}
     <section class="section engineering-section">
       <div class="container engineering-grid">
         <div>
@@ -479,7 +534,7 @@ export function home() {
         </div>
       </div>
     </section>
-    ${faq}
+    ${updatesSection(true)} ${faq}
     <section class="section home-gallery">
       <div class="container">
         <div class="section-heading">

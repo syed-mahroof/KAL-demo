@@ -1,0 +1,22 @@
+[
+  {
+    "route": "/",
+    "failures": []
+  },
+  {
+    "route": "/products/",
+    "failures": []
+  },
+  {
+    "route": "/about/",
+    "failures": []
+  },
+  {
+    "route": "/news/",
+    "failures": []
+  },
+  {
+    "route": "/contact/",
+    "failures": []
+  }
+]

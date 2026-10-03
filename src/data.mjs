@@ -1,4 +1,85 @@
 export const official = "https://kal.kerala.gov.in";
+export const governmentLeaders = [
+  {
+    name: "Shri. V. D. Satheesan",
+    role: "Chief Minister",
+    image: "chief-minister",
+  },
+  {
+    name: "Shri. P. K. Kunhalikkutty",
+    role: "Minister for Industries & Commerce",
+    image: "industries-minister",
+  },
+];
+export const boardLeaders = [
+  {
+    name: "V. S. Rajeev",
+    role: "Managing Director",
+    image: "managing-director",
+  },
+  {
+    name: "Jayalakshmi T. M.",
+    role: "Joint Secretary, Finance Department, Government of Kerala",
+    image: "director-finance",
+  },
+  {
+    name: "Ajith Kumar A.",
+    role: "Under Secretary, Industries Department, Government of Kerala",
+    image: "director-industries",
+  },
+];
+export const trustFacts = [
+  {
+    icon: "gear",
+    title: "Since 1978",
+    copy: "Incorporated as a Kerala public enterprise",
+  },
+  {
+    icon: "bolt",
+    title: "All-electric mobility",
+    copy: "Passenger, goods and utility vehicles",
+  },
+  {
+    icon: "certificate",
+    title: "Precision manufacturing",
+    copy: "Aerospace collaboration since 1988",
+  },
+  {
+    icon: "circuit",
+    title: "Advanced Technology",
+    copy: "Electric drive for everyday transport",
+  },
+  {
+    icon: "range",
+    title: "Longer Range",
+    copy: "See each model’s published range and conditions",
+  },
+  {
+    icon: "plug",
+    title: "Charging Flexibility",
+    copy: "Ask KAL about suitable charging arrangements",
+  },
+  {
+    icon: "leaf",
+    title: "Zero Emissions",
+    copy: "Zero tailpipe emissions during electric driving",
+  },
+  {
+    icon: "quiet",
+    title: "Quiet Operation",
+    copy: "Electric propulsion for local journeys",
+  },
+];
+export const recruitment = {
+  title: "Junior Engineer / Engineer / Senior Engineer (Machine Shop)",
+  category: "Recruitment",
+  published: "2026-09-10",
+  deadline: "2026-09-17",
+  summary:
+    "Contract engineering positions in KAL’s Machine Shop. The published application deadline was 17 September 2026.",
+  document:
+    official + "/storage/uploads/ckeditor_files/NOTIFICATION_1789034956.pdf",
+};
 export const galleryPhotos = [
   {
     image: "gallery-1",
