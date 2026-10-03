@@ -3,7 +3,6 @@ import { motionTiming } from "./motion.js";
 const carousel = document.querySelector(".hero-carousel");
 if (carousel) {
   const slides = [...carousel.querySelectorAll("[data-slide]")];
-  const positions = [...carousel.querySelectorAll("[data-carousel-position]")];
   const pauseButton = carousel.querySelector("[data-carousel-pause]");
   const status = carousel.querySelector("[data-carousel-status]");
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
@@ -58,7 +57,7 @@ if (carousel) {
     schedule();
   }
   async function show(index, manual = false) {
-    if (manual) setPaused(true);
+    if (manual && carousel.contains(document.activeElement)) setPaused(true);
     const next = (index + slides.length) % slides.length;
     const token = ++request;
     const slide = slides[next];
@@ -86,9 +85,6 @@ if (carousel) {
       item.setAttribute("aria-hidden", String(i !== current));
       item.toggleAttribute("data-active", i === current);
     });
-    positions.forEach((button, i) =>
-      button.setAttribute("aria-pressed", String(i === current)),
-    );
     if (manual) status.textContent = slide.getAttribute("aria-label");
     schedule();
   }
@@ -102,17 +98,6 @@ if (carousel) {
     setPaused(pauseIntent ?? !paused);
     pauseIntent = undefined;
   });
-  carousel
-    .querySelector("[data-carousel-prev]")
-    .addEventListener("click", () => show(current - 1, true));
-  carousel
-    .querySelector("[data-carousel-next]")
-    .addEventListener("click", () => show(current + 1, true));
-  positions.forEach((button) =>
-    button.addEventListener("click", () =>
-      show(Number(button.dataset.carouselPosition), true),
-    ),
-  );
   carousel.addEventListener("focusin", () => setPaused(true));
   carousel.addEventListener("pointerenter", (event) => {
     if (event.pointerType === "mouse") {

@@ -51,7 +51,31 @@ const paths = {
 export const icon = (name, cls = "") =>
   `<svg class="icon ${cls}" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] || paths.document}</svg>`;
 export const image = (name, alt, cls = "", eager = false) =>
-  `<img src="/images/${name}.webp" alt="${escape(alt)}" class="${cls}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" width="900" height="600">`;
+  `<img src="/images/${name}.webp" alt="${escape(alt)}" class="${cls}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" width="${imageSizes[name]?.[0] || 900}" height="${imageSizes[name]?.[1] || 600}">`;
+const imageSizes = {
+  factory: [574, 598],
+  aerospace: [636, 479],
+  "chief-minister": [244, 282],
+  "industries-minister": [244, 282],
+  "managing-director": [310, 280],
+  "director-finance": [310, 280],
+  "director-industries": [310, 280],
+  "neem-g": [900, 904],
+  "green-stream": [440, 343],
+  "garbage-cart": [410, 320],
+  "canopy-cart": [900, 1200],
+  "tipping-cart": [410, 320],
+  "mini-cart": [410, 320],
+  "ice-cream-cart": [900, 700],
+  "electric-buggy": [410, 320],
+  "mini-cart-plus": [900, 692],
+  "cargo-cutout": [636, 479],
+  "gallery-1": [800, 600],
+  "gallery-2": [900, 591],
+  "gallery-3": [800, 600],
+  "gallery-4": [800, 600],
+  "gallery-5": [800, 600],
+};
 export const external = (path, text, cls = "") =>
   `<a class="${cls}" href="${path.startsWith("http") ? path : official + path}" target="_blank" rel="noopener noreferrer">${text}${icon("external")}</a>`;
 
@@ -266,6 +290,19 @@ function footer() {
       <button class="icon-button gallery-close" aria-label="Close photo">
         ${icon("close")}</button
       ><img alt="" />
+      <div class="gallery-navigation">
+        <button
+          class="icon-button"
+          data-gallery-prev
+          aria-label="Previous photo"
+        >
+          ${icon("chevron", "previous-photo")}
+        </button>
+        <span class="gallery-count" role="status" aria-live="polite"></span>
+        <button class="icon-button" data-gallery-next aria-label="Next photo">
+          ${icon("chevron", "next-photo")}
+        </button>
+      </div>
       <p></p>
     </dialog>`;
 }
@@ -305,7 +342,7 @@ export function layout({
         <link rel="stylesheet" href="/src/style.css" />
         <script type="module" src="/src/main.js"></script>
       </head>
-      <body>
+      <body class="${active === "home" ? "home-page" : "inner-page"}">
         ${header(active)}
         <main id="main">${content}</main>
         ${footer()}
@@ -381,7 +418,7 @@ export function publicStewardship(preview = false) {
   const people = preview
     ? [...governmentLeaders, boardLeaders[0]]
     : governmentLeaders;
-  return `<section class="section stewardship-section" id="government"><div class="container stewardship-grid"><div class="stewardship-intro"><span class="eyebrow">Public stewardship</span><h2>A Government of<br>Keralam undertaking.</h2><p>Kerala Automobiles Limited<br>Department of Industries & Commerce</p><a class="text-link" href="${preview ? "/about/#leadership" : official + "/board-of-directors"}" ${preview ? "" : 'target="_blank" rel="noopener noreferrer"'}>${preview ? "Meet our board" : "Official leadership information"} ${icon(preview ? "chevron" : "external")}</a></div><div class="stewardship-people ${preview ? "stewardship-preview" : ""}">${people.map(leaderCard).join("")}</div></div></section>`;
+  return `<section class="section stewardship-section" id="government"><div class="container stewardship-grid"><div class="stewardship-intro"><span class="eyebrow">Public stewardship</span><h2>A Government of <span>Keralam undertaking.</span></h2><p>Kerala Automobiles Limited<br>Department of Industries & Commerce</p><a class="text-link" href="${preview ? "/about/#leadership" : official + "/board-of-directors"}" ${preview ? "" : 'target="_blank" rel="noopener noreferrer"'}>${preview ? "Meet our board" : "Official leadership information"} ${icon(preview ? "chevron" : "external")}</a></div><div class="stewardship-people ${preview ? "stewardship-preview" : ""}">${people.map(leaderCard).join("")}</div></div></section>`;
 }
 function trustContent(fact) {
   return `${icon(fact.icon)}<span><strong>${fact.title}</strong><span>${fact.copy}</span></span>`;
@@ -395,7 +432,7 @@ function trustStrip() {
     )
     .join(
       "",
-    )}</div><button class="trust-pause" data-trust-pause aria-pressed="false" hidden>${icon("pause")}<span>Pause highlights</span></button></div>${trustFacts.map((fact, i) => `<template data-trust-item="${i}">${trustContent(fact)}</template>`).join("")}</section>`;
+    )}</div><button class="trust-pause motion-access" data-trust-pause aria-pressed="false" hidden>${icon("pause")}<span>Pause highlights</span></button></div>${trustFacts.map((fact, i) => `<template data-trust-item="${i}">${trustContent(fact)}</template>`).join("")}</section>`;
 }
 export function updatesSection(homepage = false) {
   const heading = homepage
@@ -551,7 +588,7 @@ export function home() {
             .slice(0, 3)
             .map(
               (photo) =>
-                `<a href="/gallery/" aria-label="View KAL photo gallery">${image(photo.image, photo.alt)}</a>`,
+                `<button class="gallery-preview-photo" data-gallery-image aria-label="View photo: ${escape(photo.caption)}">${image(photo.image, photo.alt)}<span>${photo.caption} ${icon("external")}</span></button>`,
             )
             .join("")}
         </div>

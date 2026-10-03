@@ -2,6 +2,8 @@
 
 Reviewed 3 October 2026. The implementation remains Vite, vanilla JavaScript and generated static HTML. The existing concept label, indexing protection and local enquiry draft remain in place. No deployment or enquiry transmission was performed. The unrelated `CODEX-REDESIGN-PROMPT.md` was preserved.
 
+This note records the first refinement pass. The subsequent user-requested visual and interaction polish, including hidden motion controls, is documented in [POLISH.md](POLISH.md). [QA.md](QA.md) records the current verification.
+
 ## Research and decisions
 
 | Source                                                                                                                                                  | Evidence and resulting decision                                                                                                                                                                                                                                           |

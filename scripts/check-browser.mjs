@@ -15,7 +15,7 @@ const browser = await chromium.launch({
     : {}),
 });
 const base = process.env.PREVIEW_URL || "http://127.0.0.1:4173";
-const out = "audit/screenshots/refinement";
+const out = "audit/screenshots/polish";
 await mkdir(out, { recursive: true });
 const errors = [],
   failures = [],
@@ -92,6 +92,65 @@ await check("Viewport and route matrix", async () => {
   assert.deepEqual(overflows, []);
 });
 await check(
+  "Header alignment, portrait frames and intrinsic image dimensions",
+  async () => {
+    for (const width of [320, 375, 390, 768, 1024, 1440]) {
+      await page.setViewportSize({ width, height: width < 700 ? 844 : 900 });
+      await go();
+      const brand = await page.locator(".brand").boundingBox();
+      const actions = await page.locator(".masthead-actions").boundingBox();
+      assert.ok(
+        brand.x + brand.width <= actions.x + 1,
+        `${width}: identity overlaps header actions`,
+      );
+      if (width === 1440) {
+        const hero = await page.locator(".hero-carousel").boundingBox();
+        const utility = await page.locator(".utility-bar").boundingBox();
+        assert.ok(Math.abs(hero.y - utility.height) < 2);
+        assert.ok(Math.abs(hero.y + hero.height - 900) < 2);
+      }
+    }
+    await page.locator(".stewardship-section").scrollIntoViewIfNeeded();
+    await page.evaluate(async () => {
+      await Promise.all(
+        [...document.querySelectorAll(".stewardship-people img")].map((img) =>
+          img.decode(),
+        ),
+      );
+    });
+    const portraits = await page
+      .locator(".stewardship-people img")
+      .evaluateAll((images) =>
+        images.map((img) => ({
+          top: img.getBoundingClientRect().top,
+          height: img.getBoundingClientRect().height,
+          fit: getComputedStyle(img).objectFit,
+          position: getComputedStyle(img).objectPosition,
+          dimensions:
+            img.getAttribute("width") === String(img.naturalWidth) &&
+            img.getAttribute("height") === String(img.naturalHeight),
+        })),
+      );
+    assert.ok(
+      Math.max(...portraits.map((p) => p.top)) -
+        Math.min(...portraits.map((p) => p.top)) <=
+        1,
+      JSON.stringify(portraits),
+    );
+    assert.ok(
+      Math.max(...portraits.map((p) => p.height)) -
+        Math.min(...portraits.map((p) => p.height)) <=
+        1,
+      JSON.stringify(portraits),
+    );
+    assert.ok(
+      portraits.every(
+        (p) => p.fit === "cover" && p.position === "50% 0%" && p.dimensions,
+      ),
+    );
+  },
+);
+await check(
   "Single-row filters, category query and accessible legend",
   async () => {
     await page.setViewportSize({ width: 320, height: 844 });
@@ -134,6 +193,7 @@ await check(
   },
 );
 await check("Mobile menu, grouping, Escape and focus restoration", async () => {
+  await page.setViewportSize({ width: 320, height: 844 });
   await go();
   await page.locator(".menu-toggle").click();
   assert.equal(
@@ -195,23 +255,59 @@ await check("Search, empty result, Escape and focus restoration", async () => {
       .evaluate((el) => el === document.activeElement),
   );
 });
-await check("Gallery enlargement and dismissal", async () => {
-  await go("/gallery/");
-  await page.locator("[data-gallery-image]").first().click();
-  assert.ok(await page.locator(".gallery-dialog").evaluate((el) => el.open));
-  assert.ok(
-    await page
-      .locator(".gallery-dialog img")
-      .evaluate((el) => el.naturalWidth > 0),
-  );
-  await page.keyboard.press("Escape");
-  assert.ok(
-    await page
-      .locator("[data-gallery-image]")
-      .first()
-      .evaluate((el) => el === document.activeElement),
-  );
-});
+await check(
+  "Gallery navigation, keyboard, homepage preview and focus restoration",
+  async () => {
+    await go("/gallery/");
+    await page.locator("[data-gallery-image]").first().click();
+    assert.ok(await page.locator(".gallery-dialog").evaluate((el) => el.open));
+    assert.ok(
+      await page
+        .locator(".gallery-dialog img")
+        .evaluate((el) => el.naturalWidth > 0),
+    );
+    assert.equal(
+      await page.locator(".gallery-count").textContent(),
+      "Photo 1 of 5",
+    );
+    await page.locator("[data-gallery-next]").click();
+    assert.equal(
+      await page.locator(".gallery-count").textContent(),
+      "Photo 2 of 5",
+    );
+    await page.keyboard.press("ArrowLeft");
+    assert.equal(
+      await page.locator(".gallery-count").textContent(),
+      "Photo 1 of 5",
+    );
+    await page.keyboard.press("Escape");
+    assert.ok(
+      await page
+        .locator("[data-gallery-image]")
+        .first()
+        .evaluate((el) => el === document.activeElement),
+    );
+    await go();
+    await page.locator(".gallery-preview-photo").first().click();
+    assert.ok(await page.locator(".gallery-dialog").evaluate((el) => el.open));
+    assert.equal(
+      await page.locator(".gallery-count").textContent(),
+      "Photo 1 of 3",
+    );
+    await page.locator("[data-gallery-prev]").click();
+    assert.equal(
+      await page.locator(".gallery-count").textContent(),
+      "Photo 3 of 3",
+    );
+    await page.keyboard.press("Escape");
+    assert.ok(
+      await page
+        .locator(".gallery-preview-photo")
+        .first()
+        .evaluate((el) => el === document.activeElement),
+    );
+  },
+);
 await check(
   "Enquiry preselection, validation and local draft only",
   async () => {
@@ -281,57 +377,75 @@ await check("200% text across all routes at 320 and 1440", async () => {
   }
   assert.deepEqual(overflows, []);
 });
-await check("Hero slide geometry, controls and image framing", async () => {
-  for (const [width, height] of [
-    [320, 844],
-    [375, 844],
-    [390, 844],
-    [768, 900],
-    [1024, 900],
-    [1440, 900],
-    [844, 390],
-  ]) {
-    await page.setViewportSize({ width, height });
-    await go();
-    const initial = await page.locator(".hero-carousel").boundingBox();
-    for (let i = 0; i < 3; i++) {
-      await page.locator(`[data-carousel-position="${i}"]`).click();
-      await page.waitForFunction(
-        (index) =>
-          document
-            .querySelector(`[data-slide="${index}"]`)
-            .hasAttribute("data-active"),
-        i,
+await check(
+  "Hero slide geometry, hidden chrome and image framing",
+  async () => {
+    for (const [width, height] of [
+      [320, 844],
+      [375, 844],
+      [390, 844],
+      [768, 900],
+      [1024, 900],
+      [1440, 900],
+      [844, 390],
+    ]) {
+      await page.setViewportSize({ width, height });
+      await go();
+      const initial = await page.locator(".hero-carousel").boundingBox();
+      assert.equal(
+        await page
+          .locator(
+            "[data-carousel-position],[data-carousel-prev],[data-carousel-next]",
+          )
+          .count(),
+        0,
       );
       assert.equal(
         await page
-          .locator(".hero-carousel")
-          .boundingBox()
-          .then((r) => r.height),
-        initial.height,
+          .locator("[data-carousel-pause]")
+          .evaluate((el) => getComputedStyle(el).clipPath),
+        "inset(50%)",
       );
-      assert.equal(
-        await page
-          .locator('[data-slide][aria-hidden="true"]')
-          .evaluateAll((slides) => slides.every((el) => el.inert)),
-        true,
-      );
-      assert.ok(
-        await page
-          .locator("[data-slide][data-active] img")
-          .evaluate((el) => el.naturalWidth > 0),
-      );
-      const controls = await page.locator(".hero-controls").boundingBox();
-      const actions = await page
-        .locator("[data-active] .hero-actions")
-        .boundingBox();
-      assert.ok(
-        actions.y + actions.height <= controls.y + 1,
-        `${width}: actions overlap controls`,
-      );
+      await page.locator(".hero-carousel").focus();
+      for (let i = 0; i < 3; i++) {
+        if (i) await page.keyboard.press("ArrowRight");
+        await page.waitForFunction(
+          (index) =>
+            document
+              .querySelector(`[data-slide="${index}"]`)
+              .hasAttribute("data-active"),
+          i,
+        );
+        assert.equal(
+          await page
+            .locator(".hero-carousel")
+            .boundingBox()
+            .then((r) => r.height),
+          initial.height,
+        );
+        assert.equal(
+          await page
+            .locator('[data-slide][aria-hidden="true"]')
+            .evaluateAll((slides) => slides.every((el) => el.inert)),
+          true,
+        );
+        assert.ok(
+          await page
+            .locator("[data-slide][data-active] img")
+            .evaluate((el) => el.naturalWidth > 0),
+        );
+        const actions = await page
+          .locator("[data-active] .hero-actions")
+          .boundingBox();
+        const support = await page.locator(".hero-support").boundingBox();
+        assert.ok(
+          actions.y + actions.height <= support.y + 1,
+          `${width}: actions overlap support`,
+        );
+      }
     }
-  }
-});
+  },
+);
 await check(
   "Autoplay, hover, persistent focus/manual pause, swipe and explicit resume",
   async () => {
@@ -391,7 +505,8 @@ await check(
       await page.locator("[data-active]").getAttribute("data-slide"),
       "0",
     );
-    await page.locator("[data-carousel-pause]").click();
+    await page.locator("[data-carousel-pause]").focus();
+    await page.keyboard.press("Enter");
     await page.mouse.move(0, 0);
     await page.clock.runFor(7100);
     await page.waitForFunction(() =>
@@ -420,14 +535,20 @@ await check(
         .then((r) => r.height),
       initial.height,
     );
-    await page.locator("[data-trust-pause]").click();
+    assert.equal(
+      await page
+        .locator("[data-trust-pause]")
+        .evaluate((el) => getComputedStyle(el).clipPath),
+      "inset(50%)",
+    );
+    await page.locator("[data-trust-pause]").focus();
     await page.mouse.move(0, 0);
     await page.clock.runFor(15000);
     assert.deepEqual(
       await page.locator(".trust-content strong").allTextContents(),
       changed,
     );
-    await page.locator("[data-trust-pause]").click();
+    await page.keyboard.press("Enter");
     await page.mouse.move(0, 0);
     await page.evaluate(() => scrollTo(0, document.body.scrollHeight));
     await page.clock.runFor(15000);
@@ -563,6 +684,9 @@ await check("Representative screenshots", async () => {
           return img.decode().catch(() => {});
         }),
       );
+      document
+        .querySelectorAll(".enter-pending")
+        .forEach((el) => el.classList.remove("enter-pending"));
     });
     assert.ok(
       await shots
@@ -570,6 +694,7 @@ await check("Representative screenshots", async () => {
         .evaluateAll((images) => images.every((img) => img.naturalWidth > 0)),
       name + ": missing photograph",
     );
+    await shots.waitForTimeout(700);
     await shots.screenshot({
       path: `${out}/${name}.png`,
       fullPage:
@@ -582,7 +707,8 @@ await check("Representative screenshots", async () => {
     await shots.setViewportSize({ width, height: width === 390 ? 844 : 900 });
     await shots.goto(base);
     for (const index of [1, 2]) {
-      await shots.locator(`[data-carousel-position="${index}"]`).click();
+      await shots.locator(".hero-carousel").focus();
+      await shots.keyboard.press("ArrowRight");
       await shots.waitForFunction(
         (i) =>
           document
@@ -591,12 +717,24 @@ await check("Representative screenshots", async () => {
         index,
       );
       await shots.evaluate(() => scrollTo(0, 0));
+      await shots.evaluate(() => document.activeElement.blur());
       await shots.screenshot({ path: `${out}/hero-${index}-${width}.png` });
     }
   }
   await shots.goto(base);
   await shots.locator("[data-text-size]").click();
   await shots.screenshot({ path: `${out}/text-200-desktop.png` });
+  await shots.setViewportSize({ width: 320, height: 900 });
+  await shots.goto(base);
+  await shots.locator("[data-text-size]").click();
+  await shots
+    .locator(".hero-image")
+    .first()
+    .evaluate((img) => img.decode());
+  await shots.screenshot({
+    path: `${out}/text-200-mobile.png`,
+    fullPage: true,
+  });
   await shots.close();
 });
 await browser.close();

@@ -19,7 +19,7 @@
         <link rel="stylesheet" href="/src/style.css" />
         <script type="module" src="/src/main.js"></script>
       </head>
-      <body>
+      <body class="home-page">
         <a class="skip-link" href="#main">Skip to main content</a>
     <div class="utility-bar">
       <div class="container utility-inner">
@@ -153,8 +153,9 @@
       </h1>
       <p class="sr-only" id="carousel-instructions">
         Use left and right arrow keys to browse the vehicle showcase. Focusing
-        the showcase pauses automatic rotation until you choose Resume. On touch
-        screens, swipe left or right to change vehicles.
+        the showcase pauses automatic rotation. Tab to the pause or resume
+        button to control motion. On touch screens, swipe left or right to
+        change vehicles.
       </p>
       <div class="hero-slides">
         
@@ -191,7 +192,7 @@
                     <span class="hero-eyebrow"
                       ><span></span>Made in Kerala. Moving forward.</span
                     >
-                    <h2>Kerala’s own.<br>Electric by design.</h2>
+                    <h2>Kerala’s own. <span>Electric by design.</span></h2>
                     <p>Passenger journeys, local deliveries and public service. Electric vehicles built in Kerala, for the work of every day.</p>
                     <div class="hero-actions">
                       <a class="button button-white" href="/products/"
@@ -242,7 +243,7 @@
                     <span class="hero-eyebrow"
                       ><span></span>Built for our communities.</span
                     >
-                    <h2>Clean streets.<br>Powered by KAL.</h2>
+                    <h2>Clean streets. <span>Powered by KAL.</span></h2>
                     <p>Purpose-built electric utility vehicles for the work that keeps our communities moving. Practical engineering, with a cleaner way forward.</p>
                     <div class="hero-actions">
                       <a class="button button-white" href="/products/?category=utility"
@@ -293,7 +294,7 @@
                     <span class="hero-eyebrow"
                       ><span></span>For the business of every day.</span
                     >
-                    <h2>Local journeys.<br>Electric possibilities.</h2>
+                    <h2>Local journeys. <span>Electric possibilities.</span></h2>
                     <p>From local deliveries to goods transport, Kerala Green Stream brings electric mobility to your everyday business. Designed and made in Kerala.</p>
                     <div class="hero-actions">
                       <a class="button button-white" href="/products/?category=goods"
@@ -312,28 +313,25 @@
               </div>
             
       </div>
-      <div class="container hero-controls" hidden>
-        <div class="hero-navigation">
-          <button data-carousel-prev aria-label="Previous vehicle">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="m14 6-6 6 6 6" />
-            </svg>
-          </button>
-          <div
-            class="hero-positions"
-            role="group"
-            aria-label="Choose a vehicle slide"
+      <div class="container hero-support">
+        <a href="tel:+919778466294"
+          ><svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            aria-hidden="true"
           >
-            <button data-carousel-position="0" aria-label="Slide 01: Passenger" aria-pressed="true"><span aria-hidden="true">01</span></button><button data-carousel-position="1" aria-label="Slide 02: Utility" aria-pressed="false"><span aria-hidden="true">02</span></button><button data-carousel-position="2" aria-label="Slide 03: Goods" aria-pressed="false"><span aria-hidden="true">03</span></button>
-          </div>
-          <button data-carousel-next aria-label="Next vehicle">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="m10 6 6 6-6 6" />
-            </svg>
-          </button>
-        </div>
+            <path
+              d="m7 3 3 5-2 2c1.5 3 3 4.5 6 6l2-2 5 3c-1 6-6 5-11 0S1 4 7 3Z"
+            /></svg
+          ><span>Vehicle support</span><strong>+91 97784 66294</strong></a
+        >
+      </div>
+      <div class="container hero-controls" hidden>
         <button
-          class="hero-motion-toggle"
+          class="hero-motion-toggle motion-access"
           data-carousel-pause
           aria-pressed="false"
         >
@@ -350,7 +348,7 @@
         aria-atomic="true"
       ></p>
     </section>
-   <section class="trust-strip" aria-label="KAL heritage and electric mobility benefits"><div class="container trust-panel"><div class="trust-grid"><div class="trust-slot" data-trust-slot="0"><div class="trust-content"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 3-1 3-3 1-2 4 2 2v4l4 2 3-1 3 1 4-2v-4l2-2-2-4-3-1-1-3Z"/><circle cx="12" cy="12" r="3"/></svg><span><strong>Since 1978</strong><span>Incorporated as a Kerala public enterprise</span></span></div></div><div class="trust-slot" data-trust-slot="1"><div class="trust-content"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m13 2-9 12h7l-1 8 10-12h-7l0-8Z"/></svg><span><strong>All-electric mobility</strong><span>Passenger, goods and utility vehicles</span></span></div></div><div class="trust-slot" data-trust-slot="2"><div class="trust-content"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="m8 14-1 7 5-3 5 3-1-7m-7-12 2 2 4-4"/></svg><span><strong>Precision manufacturing</strong><span>Aerospace collaboration since 1988</span></span></div></div></div><button class="trust-pause" data-trust-pause aria-pressed="false" hidden><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg><span>Pause highlights</span></button></div><template data-trust-item="0"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 3-1 3-3 1-2 4 2 2v4l4 2 3-1 3 1 4-2v-4l2-2-2-4-3-1-1-3Z"/><circle cx="12" cy="12" r="3"/></svg><span><strong>Since 1978</strong><span>Incorporated as a Kerala public enterprise</span></span></template><template data-trust-item="1"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m13 2-9 12h7l-1 8 10-12h-7l0-8Z"/></svg><span><strong>All-electric mobility</strong><span>Passenger, goods and utility vehicles</span></span></template><template data-trust-item="2"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="m8 14-1 7 5-3 5 3-1-7m-7-12 2 2 4-4"/></svg><span><strong>Precision manufacturing</strong><span>Aerospace collaboration since 1988</span></span></template><template data-trust-item="3"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="1"/><path d="M10 3v4m4-4v4m-4 10v4m4-4v4M3 10h4m-4 4h4m10-4h4m-4 4h4"/></svg><span><strong>Advanced Technology</strong><span>Electric drive for everyday transport</span></span></template><template data-trust-item="4"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19a9 9 0 1 1 18 0ZM12 15l5-7M6 14l-2-1m5-5-1-2m8 2 1-2m1 8 2-1"/><circle cx="12" cy="15" r="1"/></svg><span><strong>Longer Range</strong><span>See each model’s published range and conditions</span></span></template><template data-trust-item="5"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3v4m6-4v4M7 7h10v5a5 5 0 0 1-10 0Zm5 10v4"/></svg><span><strong>Charging Flexibility</strong><span>Ask KAL about suitable charging arrangements</span></span></template><template data-trust-item="6"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 3C9 2 3 7 4 14c1 7 11 8 14 1 2-4 2-9 2-12Z"/><path d="M3 21 15 9"/></svg><span><strong>Zero Emissions</strong><span>Zero tailpipe emissions during electric driving</span></span></template><template data-trust-item="7"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 4 0 5-5v14l-5-5H3Zm13-1a5 5 0 0 1 0 6m3-9a9 9 0 0 1 0 12"/></svg><span><strong>Quiet Operation</strong><span>Electric propulsion for local journeys</span></span></template></section>
+   <section class="trust-strip" aria-label="KAL heritage and electric mobility benefits"><div class="container trust-panel"><div class="trust-grid"><div class="trust-slot" data-trust-slot="0"><div class="trust-content"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 3-1 3-3 1-2 4 2 2v4l4 2 3-1 3 1 4-2v-4l2-2-2-4-3-1-1-3Z"/><circle cx="12" cy="12" r="3"/></svg><span><strong>Since 1978</strong><span>Incorporated as a Kerala public enterprise</span></span></div></div><div class="trust-slot" data-trust-slot="1"><div class="trust-content"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m13 2-9 12h7l-1 8 10-12h-7l0-8Z"/></svg><span><strong>All-electric mobility</strong><span>Passenger, goods and utility vehicles</span></span></div></div><div class="trust-slot" data-trust-slot="2"><div class="trust-content"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="m8 14-1 7 5-3 5 3-1-7m-7-12 2 2 4-4"/></svg><span><strong>Precision manufacturing</strong><span>Aerospace collaboration since 1988</span></span></div></div></div><button class="trust-pause motion-access" data-trust-pause aria-pressed="false" hidden><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg><span>Pause highlights</span></button></div><template data-trust-item="0"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 3-1 3-3 1-2 4 2 2v4l4 2 3-1 3 1 4-2v-4l2-2-2-4-3-1-1-3Z"/><circle cx="12" cy="12" r="3"/></svg><span><strong>Since 1978</strong><span>Incorporated as a Kerala public enterprise</span></span></template><template data-trust-item="1"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m13 2-9 12h7l-1 8 10-12h-7l0-8Z"/></svg><span><strong>All-electric mobility</strong><span>Passenger, goods and utility vehicles</span></span></template><template data-trust-item="2"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="m8 14-1 7 5-3 5 3-1-7m-7-12 2 2 4-4"/></svg><span><strong>Precision manufacturing</strong><span>Aerospace collaboration since 1988</span></span></template><template data-trust-item="3"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="1"/><path d="M10 3v4m4-4v4m-4 10v4m4-4v4M3 10h4m-4 4h4m10-4h4m-4 4h4"/></svg><span><strong>Advanced Technology</strong><span>Electric drive for everyday transport</span></span></template><template data-trust-item="4"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19a9 9 0 1 1 18 0ZM12 15l5-7M6 14l-2-1m5-5-1-2m8 2 1-2m1 8 2-1"/><circle cx="12" cy="15" r="1"/></svg><span><strong>Longer Range</strong><span>See each model’s published range and conditions</span></span></template><template data-trust-item="5"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3v4m6-4v4M7 7h10v5a5 5 0 0 1-10 0Zm5 10v4"/></svg><span><strong>Charging Flexibility</strong><span>Ask KAL about suitable charging arrangements</span></span></template><template data-trust-item="6"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 3C9 2 3 7 4 14c1 7 11 8 14 1 2-4 2-9 2-12Z"/><path d="M3 21 15 9"/></svg><span><strong>Zero Emissions</strong><span>Zero tailpipe emissions during electric driving</span></span></template><template data-trust-item="7"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 4 0 5-5v14l-5-5H3Zm13-1a5 5 0 0 1 0 6m3-9a9 9 0 0 1 0 12"/></svg><span><strong>Quiet Operation</strong><span>Electric propulsion for local journeys</span></span></template></section>
     <div class="notice-band">
       <div class="container notice-inner">
         <span class="notice-title"><svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H5v18h14V8Zm0 0v5h5M8 12h8M8 16h6"/></svg>Noticeboard</span>
@@ -377,7 +375,7 @@
       class="product-image"
       href="/products/kerala-neem-g/"
       aria-label="Explore Kerala Neem G"
-      ><img src="/images/neem-g.webp" alt="Kerala Neem G" class="" loading="lazy" decoding="async" width="900" height="600"></a
+      ><img src="/images/neem-g.webp" alt="Kerala Neem G" class="" loading="lazy" decoding="async" width="900" height="904"></a
     >
     <div class="product-card-body">
       <span class="category-label">Passenger mobility</span>
@@ -405,7 +403,7 @@
       class="product-image"
       href="/products/kerala-green-stream-e-cart/"
       aria-label="Explore Kerala Green Stream"
-      ><img src="/images/green-stream.webp" alt="Kerala Green Stream" class="" loading="lazy" decoding="async" width="900" height="600"></a
+      ><img src="/images/green-stream.webp" alt="Kerala Green Stream" class="" loading="lazy" decoding="async" width="440" height="343"></a
     >
     <div class="product-card-body">
       <span class="category-label">Goods transportation</span>
@@ -433,7 +431,7 @@
       class="product-image"
       href="/products/e-cart-with-garbage-box-having-dry-and-wet-compartments-hydraulic-tipping-mechanism/"
       aria-label="Explore Waste collection E-Cart"
-      ><img src="/images/garbage-cart.webp" alt="Waste collection E-Cart" class="" loading="lazy" decoding="async" width="900" height="600"></a
+      ><img src="/images/garbage-cart.webp" alt="Waste collection E-Cart" class="" loading="lazy" decoding="async" width="410" height="320"></a
     >
     <div class="product-card-body">
       <span class="category-label">Municipal utility</span>
@@ -461,7 +459,7 @@
     <section class="section about-section">
       <div class="container about-grid">
         <div class="about-photo">
-          <img src="/images/factory.webp" alt="Kerala Automobiles Limited factory at Aralumoodu" class="" loading="lazy" decoding="async" width="900" height="600">
+          <img src="/images/factory.webp" alt="Kerala Automobiles Limited factory at Aralumoodu" class="" loading="lazy" decoding="async" width="574" height="598">
           <div class="photo-caption">
             <strong>1978</strong
             ><span>Our roots in Kerala.<br />Our vision for tomorrow.</span>
@@ -491,7 +489,7 @@
         </div>
       </div>
     </section>
-    <section class="section stewardship-section" id="government"><div class="container stewardship-grid"><div class="stewardship-intro"><span class="eyebrow">Public stewardship</span><h2>A Government of<br>Keralam undertaking.</h2><p>Kerala Automobiles Limited<br>Department of Industries & Commerce</p><a class="text-link" href="/about/#leadership" >Meet our board <svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 10 4 4 4-4"/></svg></a></div><div class="stewardship-people stewardship-preview"><article class="leader"><img src="/images/chief-minister.webp" alt="Shri. V. D. Satheesan" class="" loading="lazy" decoding="async" width="900" height="600"><div><h3>Shri. V. D. Satheesan</h3><p>Chief Minister</p></div></article><article class="leader"><img src="/images/industries-minister.webp" alt="Shri. P. K. Kunhalikkutty" class="" loading="lazy" decoding="async" width="900" height="600"><div><h3>Shri. P. K. Kunhalikkutty</h3><p>Minister for Industries & Commerce</p></div></article><article class="leader"><img src="/images/managing-director.webp" alt="V. S. Rajeev" class="" loading="lazy" decoding="async" width="900" height="600"><div><h3>V. S. Rajeev</h3><p>Managing Director</p></div></article></div></div></section>
+    <section class="section stewardship-section" id="government"><div class="container stewardship-grid"><div class="stewardship-intro"><span class="eyebrow">Public stewardship</span><h2>A Government of <span>Keralam undertaking.</span></h2><p>Kerala Automobiles Limited<br>Department of Industries & Commerce</p><a class="text-link" href="/about/#leadership" >Meet our board <svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 10 4 4 4-4"/></svg></a></div><div class="stewardship-people stewardship-preview"><article class="leader"><img src="/images/chief-minister.webp" alt="Shri. V. D. Satheesan" class="" loading="lazy" decoding="async" width="244" height="282"><div><h3>Shri. V. D. Satheesan</h3><p>Chief Minister</p></div></article><article class="leader"><img src="/images/industries-minister.webp" alt="Shri. P. K. Kunhalikkutty" class="" loading="lazy" decoding="async" width="244" height="282"><div><h3>Shri. P. K. Kunhalikkutty</h3><p>Minister for Industries & Commerce</p></div></article><article class="leader"><img src="/images/managing-director.webp" alt="V. S. Rajeev" class="" loading="lazy" decoding="async" width="310" height="280"><div><h3>V. S. Rajeev</h3><p>Managing Director</p></div></article></div></div></section>
     <section class="section engineering-section">
       <div class="container engineering-grid">
         <div>
@@ -580,7 +578,7 @@
           >
         </div>
         <div class="gallery-preview">
-          <a href="/gallery/" aria-label="View KAL photo gallery"><img src="/images/gallery-1.webp" alt="Visitors exchanging a potted plant at the KAL factory" class="" loading="lazy" decoding="async" width="900" height="600"></a><a href="/gallery/" aria-label="View KAL photo gallery"><img src="/images/gallery-2.webp" alt="A blue KAL electric three-wheeler on display at a dealership" class="" loading="lazy" decoding="async" width="900" height="600"></a><a href="/gallery/" aria-label="View KAL photo gallery"><img src="/images/gallery-3.webp" alt="A visitor greeting a representative outside the KAL building" class="" loading="lazy" decoding="async" width="900" height="600"></a>
+          <button class="gallery-preview-photo" data-gallery-image aria-label="View photo: A welcome at the KAL factory"><img src="/images/gallery-1.webp" alt="Visitors exchanging a potted plant at the KAL factory" class="" loading="lazy" decoding="async" width="800" height="600"><span>A welcome at the KAL factory <svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3h7v7m0-7L10 14M10 3H3v18h18v-7"/></svg></span></button><button class="gallery-preview-photo" data-gallery-image aria-label="View photo: KAL electric mobility on display"><img src="/images/gallery-2.webp" alt="A blue KAL electric three-wheeler on display at a dealership" class="" loading="lazy" decoding="async" width="900" height="591"><span>KAL electric mobility on display <svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3h7v7m0-7L10 14M10 3H3v18h18v-7"/></svg></span></button><button class="gallery-preview-photo" data-gallery-image aria-label="View photo: Visitors at KAL"><img src="/images/gallery-3.webp" alt="A visitor greeting a representative outside the KAL building" class="" loading="lazy" decoding="async" width="800" height="600"><span>Visitors at KAL <svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3h7v7m0-7L10 14M10 3H3v18h18v-7"/></svg></span></button>
         </div>
       </div>
     </section></main>
@@ -672,6 +670,19 @@
       <button class="icon-button gallery-close" aria-label="Close photo">
         <svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button
       ><img alt="" />
+      <div class="gallery-navigation">
+        <button
+          class="icon-button"
+          data-gallery-prev
+          aria-label="Previous photo"
+        >
+          <svg class="icon previous-photo" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 10 4 4 4-4"/></svg>
+        </button>
+        <span class="gallery-count" role="status" aria-live="polite"></span>
+        <button class="icon-button" data-gallery-next aria-label="Next photo">
+          <svg class="icon next-photo" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 10 4 4 4-4"/></svg>
+        </button>
+      </div>
       <p></p>
     </dialog>
       </body>

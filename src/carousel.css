@@ -1,9 +1,9 @@
-/* The same reserved stage holds every slide, including when text grows. */
+/* One shared stage keeps scene changes from moving the page. */
 .hero.hero-carousel {
   min-height: 0;
 }
 .hero-carousel:focus-visible {
-  outline: 3px solid #d5a147;
+  outline: 3px solid #f4cc7b;
   outline-offset: -4px;
 }
 .hero-slides {
@@ -14,8 +14,8 @@
   position: relative;
   grid-area: 1 / 1;
   min-width: 0;
-  visibility: visible;
   opacity: 1;
+  visibility: visible;
   transition:
     opacity 800ms ease,
     visibility 800ms;
@@ -33,30 +33,31 @@
 }
 .hero-slide .hero-image {
   object-fit: cover;
-  object-position: 70% center;
+  object-position: 90% center;
   transform: scale(1);
   transition: transform 850ms cubic-bezier(0.2, 0.65, 0.3, 1);
 }
 .hero-slide[aria-hidden="true"] .hero-image {
-  transform: scale(1.015);
+  transform: scale(1.01);
 }
 .hero-slide .hero-shade {
   background:
     linear-gradient(
       90deg,
-      #06202bef,
-      #06202bba 26%,
-      #06202b38 52%,
-      transparent 75%
+      #06202bea,
+      #06202baa 26%,
+      #06202b25 52%,
+      transparent 74%
     ),
-    linear-gradient(0deg, #06202bcc, transparent 23%);
+    linear-gradient(180deg, #06202be6, #06202b20 24%, transparent 40%),
+    linear-gradient(0deg, #06202bb3, transparent 24%);
 }
 .hero-slide .hero-inner {
   min-height: max(34rem, calc(100svh - var(--header-height, 197px)));
-  padding-block: 4rem 7.5rem;
+  padding-block: 4.5rem 6.5rem;
 }
 .hero-slide .hero-copy {
-  max-width: 32rem;
+  max-width: 30rem;
 }
 .hero-slide h2 {
   color: white;
@@ -66,13 +67,16 @@
   letter-spacing: -0.045em;
 }
 .hero-slide .hero-copy > p {
-  max-width: 26rem;
+  max-width: 25rem;
+}
+.hero-slide h2 > span {
+  display: block;
 }
 .hero-slide .hero-actions {
   flex-wrap: wrap;
 }
 .hero-slide .hero-product {
-  bottom: 2.4rem;
+  bottom: 2rem;
 }
 .hero-copy > * {
   transition:
@@ -81,7 +85,7 @@
 }
 .hero-slide[aria-hidden="true"] .hero-copy > * {
   opacity: 0;
-  transform: translateY(12px);
+  transform: translateY(10px);
 }
 .hero-slide[data-active] .hero-copy > :nth-child(2) {
   transition-delay: 70ms;
@@ -94,77 +98,85 @@
 }
 .hero-controls {
   position: absolute;
-  bottom: 1.65rem;
   inset-inline: 0;
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  z-index: 1;
+  bottom: 1.5rem;
+  z-index: 2;
   pointer-events: none;
 }
 .hero-controls button {
   pointer-events: auto;
-  min-width: 44px;
+}
+.motion-access {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  margin: -1px;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+}
+.motion-access:focus-visible {
+  width: auto;
+  height: auto;
   min-height: 44px;
-  padding: 8px;
+  clip-path: none;
+  overflow: visible;
+  margin: 0;
+  padding: 10px 14px;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  background: #0a2b3ae6;
+  gap: 8px;
   color: white;
+  background: var(--navy);
   border: 1px solid #8ca8b3;
   border-radius: 3px;
-  font-size: 0.78rem;
-  line-height: 1.4;
-}
-.hero-controls button:hover {
-  background: white;
-  color: var(--navy);
-}
-.hero-controls button:focus-visible {
-  outline-color: #f4cc7b;
+  outline: 3px solid #f4cc7b;
   outline-offset: 3px;
 }
-.hero-controls svg {
-  width: 19px;
-  height: 19px;
+.hero-motion-toggle:focus-visible {
+  bottom: 0;
+  left: 0;
+  font-size: 0.8rem;
+}
+.hero-motion-toggle svg {
+  width: 18px;
+  height: 18px;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.6;
   stroke-linecap: round;
-  stroke-linejoin: round;
 }
-.hero-navigation,
-.hero-positions {
-  display: flex;
-  gap: 5px;
+.hero-support {
+  position: absolute;
+  bottom: 1.8rem;
+  inset-inline: 0;
+  pointer-events: none;
 }
-.hero-positions button {
-  border-color: transparent;
-  background: transparent;
-  font-variant-numeric: tabular-nums;
-  border-bottom: 2px solid #829eaa;
-  border-radius: 0;
+.hero-support a {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  pointer-events: auto;
+  font-size: 0.78rem;
+  color: #e7f0f3;
 }
-.hero-positions button[aria-pressed="true"] {
-  border-bottom-color: white;
-  background: #ffffff15;
+.hero-support .icon {
+  width: 19px;
+  height: 19px;
+  color: #9eddd3;
 }
-.hero-positions button:hover {
-  background: white;
-  color: var(--navy);
+.hero-support strong {
+  color: white;
+  font-weight: 600;
 }
-.hero-controls .hero-motion-toggle {
-  width: auto;
-  height: auto;
-  margin: 0;
-  clip-path: none;
-  overflow: visible;
-  gap: 8px;
-  padding-inline: 12px;
-}
-.hero-motion-toggle:disabled {
-  opacity: 0.85;
+.hero-support a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 @media (min-width: 1101px) and (min-aspect-ratio: 2.3/1) {
   .hero-slide .hero-image {
@@ -172,31 +184,47 @@
     object-position: right center;
   }
 }
-@media (max-width: 1100px) and (min-width: 701px) {
-  .hero-slide .hero-copy {
-    max-width: 25rem;
-  }
-  .hero-slide h2 {
-    font-size: 2.8rem;
-  }
-  .hero-slide .hero-copy > p {
-    max-width: 21rem;
+@media (min-width: 701px) and (max-width: 1100px) {
+  .hero-slide > picture {
+    bottom: auto;
+    height: auto;
+    aspect-ratio: 1840 / 884;
   }
   .hero-slide .hero-image {
     object-fit: contain;
-    object-position: right center;
+    object-position: center top;
   }
-  .hero-slide .hero-shade {
-    background: linear-gradient(
-      90deg,
-      #06202bf5,
-      #06202bc7 30%,
-      #06202b25 64%,
-      transparent
-    );
+  .hero-slide .hero-inner {
+    min-height: max(38rem, calc(100svh - var(--header-height)));
+    padding-top: calc(48vw - 3rem);
+    padding-bottom: 6rem;
+    align-items: flex-start;
+  }
+  .hero-slide .hero-copy {
+    max-width: 46rem;
+  }
+  .hero-slide h2 {
+    font-size: clamp(2.3rem, 4vw, 2.75rem);
+  }
+  .hero-slide h2 > span {
+    display: inline;
+  }
+  .hero-slide .hero-copy > p {
+    max-width: 36rem;
+    margin-top: 1rem;
+  }
+  .hero-slide .hero-actions {
+    margin-top: 1.5rem;
   }
   .hero-slide .hero-product {
     display: none;
+  }
+  .hero-slide .hero-shade {
+    background: linear-gradient(
+      180deg,
+      transparent calc(48vw - 6rem),
+      var(--navy) calc(48vw - 0.8rem)
+    );
   }
 }
 @media (max-width: 700px) {
@@ -217,8 +245,8 @@
     inset: 0;
     background: linear-gradient(
       180deg,
-      transparent 65%,
-      #0b334500 72%,
+      transparent 70%,
+      #0b334500 78%,
       var(--navy)
     );
   }
@@ -226,9 +254,9 @@
     display: none;
   }
   .hero-slide .hero-inner {
-    min-height: max(39rem, calc(100svh - var(--header-height, 140px)));
-    padding-top: calc(75vw - 1rem);
-    padding-bottom: 8.75rem;
+    min-height: max(37rem, calc(100svh - var(--header-height, 130px)));
+    padding-top: calc(75vw - 0.5rem);
+    padding-bottom: 6rem;
     align-items: flex-start;
   }
   .hero-slide .hero-copy {
@@ -240,7 +268,7 @@
     line-height: 1.12;
   }
   .hero-slide .hero-eyebrow {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     margin-bottom: 1rem;
   }
   .hero-slide .hero-copy > p {
@@ -261,21 +289,20 @@
   .hero-slide .hero-product {
     display: none;
   }
-  .hero-controls {
-    bottom: 1.1rem;
-    gap: 0.6rem;
+  .hero-support {
+    bottom: 1.2rem;
+  }
+  .hero-support a {
+    gap: 8px;
+    font-size: 0.7rem;
     flex-wrap: wrap;
   }
-  .hero-controls .hero-motion-toggle {
-    font-size: 0.72rem;
-  }
-  .hero-navigation,
-  .hero-positions {
-    gap: 2px;
-  }
-  .hero-controls button {
-    min-width: 44px;
-  }
+}
+.large-text .hero-slide .hero-inner {
+  padding-bottom: 6rem;
+}
+.large-text .hero-support {
+  display: none;
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-slide,

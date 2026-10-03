@@ -1,6 +1,6 @@
 # KAL website audit and demonstration scope
 
-The 3 October 2026 refinement is documented in [REFINEMENT.md](REFINEMENT.md), with the current verification record in [QA.md](QA.md). The findings below describe the original 1 October review.
+The 3 October 2026 refinement is documented in [REFINEMENT.md](REFINEMENT.md). The latest visual and interaction pass is in [POLISH.md](POLISH.md), with current verification in [QA.md](QA.md). The findings below describe the original 1 October review.
 
 Reviewed 1 October 2026. Sources: [KAL home](https://kal.kerala.gov.in/), [vehicle details](https://kal.kerala.gov.in/products/kerala-neem-g), [manufacturing](https://kal.kerala.gov.in/manufacturing-facilities), [contact](https://kal.kerala.gov.in/contact-us), public HTML and robots.txt.
 

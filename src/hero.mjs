@@ -3,7 +3,7 @@ const slides = [
     image: "hero-neem",
     alt: "Blue Kerala Neem G electric passenger three-wheeler, shown in full",
     eyebrow: "Made in Kerala. Moving forward.",
-    title: "Kerala’s own.<br>Electric by design.",
+    title: "Kerala’s own. <span>Electric by design.</span>",
     copy: "Passenger journeys, local deliveries and public service. Electric vehicles built in Kerala, for the work of every day.",
     button: "Discover our vehicles",
     link: "/products/",
@@ -17,7 +17,7 @@ const slides = [
     image: "hero-utility",
     alt: "Blue KAL electric waste collection cart with separate waste compartments",
     eyebrow: "Built for our communities.",
-    title: "Clean streets.<br>Powered by KAL.",
+    title: "Clean streets. <span>Powered by KAL.</span>",
     copy: "Purpose-built electric utility vehicles for the work that keeps our communities moving. Practical engineering, with a cleaner way forward.",
     button: "Explore utility vehicles",
     link: "/products/?category=utility",
@@ -31,7 +31,7 @@ const slides = [
     image: "hero-cargo",
     alt: "Blue Kerala Green Stream electric goods cart with its open cargo bed visible",
     eyebrow: "For the business of every day.",
-    title: "Local journeys.<br>Electric possibilities.",
+    title: "Local journeys. <span>Electric possibilities.</span>",
     copy: "From local deliveries to goods transport, Kerala Green Stream brings electric mobility to your everyday business. Designed and made in Kerala.",
     button: "Explore goods vehicles",
     link: "/products/?category=goods",
@@ -57,8 +57,9 @@ export function heroCarousel() {
       </h1>
       <p class="sr-only" id="carousel-instructions">
         Use left and right arrow keys to browse the vehicle showcase. Focusing
-        the showcase pauses automatic rotation until you choose Resume. On touch
-        screens, swipe left or right to change vehicles.
+        the showcase pauses automatic rotation. Tab to the pause or resume
+        button to control motion. On touch screens, swipe left or right to
+        change vehicles.
       </p>
       <div class="hero-slides">
         ${slides
@@ -118,28 +119,25 @@ export function heroCarousel() {
           )
           .join("")}
       </div>
-      <div class="container hero-controls" hidden>
-        <div class="hero-navigation">
-          <button data-carousel-prev aria-label="Previous vehicle">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="m14 6-6 6 6 6" />
-            </svg>
-          </button>
-          <div
-            class="hero-positions"
-            role="group"
-            aria-label="Choose a vehicle slide"
+      <div class="container hero-support">
+        <a href="tel:+919778466294"
+          ><svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            aria-hidden="true"
           >
-            ${slides.map((slide, i) => `<button data-carousel-position="${i}" aria-label="Slide 0${i + 1}: ${slide.label}" aria-pressed="${i === 0}"><span aria-hidden="true">0${i + 1}</span></button>`).join("")}
-          </div>
-          <button data-carousel-next aria-label="Next vehicle">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="m10 6 6 6-6 6" />
-            </svg>
-          </button>
-        </div>
+            <path
+              d="m7 3 3 5-2 2c1.5 3 3 4.5 6 6l2-2 5 3c-1 6-6 5-11 0S1 4 7 3Z"
+            /></svg
+          ><span>Vehicle support</span><strong>+91 97784 66294</strong></a
+        >
+      </div>
+      <div class="container hero-controls" hidden>
         <button
-          class="hero-motion-toggle"
+          class="hero-motion-toggle motion-access"
           data-carousel-pause
           aria-pressed="false"
         >

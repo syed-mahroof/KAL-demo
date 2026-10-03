@@ -37,6 +37,10 @@ function measureHeader() {
   const mobile = getComputedStyle(menuToggle).display !== "none";
   const mastheadHeight = headerParts[1].getBoundingClientRect().height;
   document.documentElement.style.setProperty(
+    "--utility-height",
+    `${headerParts[0].getBoundingClientRect().height}px`,
+  );
+  document.documentElement.style.setProperty(
     "--masthead-height",
     `${mastheadHeight}px`,
   );
@@ -57,6 +61,9 @@ window.addEventListener("resize", () => {
   if (getComputedStyle(menuToggle).display === "none") setMenu(false);
 });
 measureHeader();
+new IntersectionObserver(([entry]) => {
+  header.classList.toggle("is-scrolled", !entry.isIntersecting);
+}).observe(headerParts[0]);
 document.addEventListener("click", (event) => {
   if (header.classList.contains("menu-open") && !header.contains(event.target))
     setMenu(false);
@@ -193,19 +200,79 @@ for (const dialog of document.querySelectorAll("dialog")) {
 }
 
 const galleryDialog = document.querySelector(".gallery-dialog");
-document.querySelectorAll("[data-gallery-image]").forEach((button) => {
+const galleryPhotos = [...document.querySelectorAll("[data-gallery-image]")];
+let galleryIndex = 0,
+  galleryOpener;
+function showGallery(index) {
+  if (!galleryPhotos.length) return;
+  galleryIndex = (index + galleryPhotos.length) % galleryPhotos.length;
+  const photo = galleryPhotos[galleryIndex];
+  const img = galleryDialog.querySelector("img");
+  img.src = photo.querySelector("img").src;
+  img.alt = photo.querySelector("img").alt;
+  galleryDialog.querySelector("p").textContent =
+    photo.querySelector("span").textContent;
+  galleryDialog.querySelector(".gallery-count").textContent =
+    `Photo ${galleryIndex + 1} of ${galleryPhotos.length}`;
+}
+galleryPhotos.forEach((button, index) => {
   button.addEventListener("click", () => {
-    const img = galleryDialog.querySelector("img");
-    img.src = button.querySelector("img").src;
-    img.alt = button.querySelector("img").alt;
-    galleryDialog.querySelector("p").textContent =
-      button.querySelector("span").textContent;
+    galleryOpener = button;
+    showGallery(index);
     galleryDialog.showModal();
   });
 });
+galleryDialog
+  .querySelector("[data-gallery-prev]")
+  .addEventListener("click", () => showGallery(galleryIndex - 1));
+galleryDialog
+  .querySelector("[data-gallery-next]")
+  .addEventListener("click", () => showGallery(galleryIndex + 1));
+galleryDialog.addEventListener("keydown", (event) => {
+  if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+  event.preventDefault();
+  event.stopPropagation();
+  showGallery(galleryIndex + (event.key === "ArrowRight" ? 1 : -1));
+});
+galleryDialog.addEventListener("close", () => galleryOpener?.focus());
 document
   .querySelector(".gallery-close")
   ?.addEventListener("click", () => galleryDialog.close());
+
+const motionPreference = matchMedia("(prefers-reduced-motion: reduce)");
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      entry.target.classList.remove("enter-pending");
+      revealObserver.unobserve(entry.target);
+    }
+  },
+  { rootMargin: "0px 0px -30px 0px", threshold: 0.08 },
+);
+if (!motionPreference.matches) {
+  document
+    .querySelectorAll(
+      ".about-grid, .stewardship-grid, .engineering-grid, .updates-grid, .gallery-preview, .facility-grid",
+    )
+    .forEach((element) => {
+      if (element.getBoundingClientRect().top < innerHeight) return;
+      element.classList.add("enter-pending");
+      revealObserver.observe(element);
+      element.addEventListener(
+        "focusin",
+        () => element.classList.remove("enter-pending"),
+        { once: true },
+      );
+    });
+}
+motionPreference.addEventListener("change", () => {
+  if (!motionPreference.matches) return;
+  document
+    .querySelectorAll(".enter-pending")
+    .forEach((el) => el.classList.remove("enter-pending"));
+  revealObserver.disconnect();
+});
 
 const form = document.querySelector("#enquiry-form");
 if (form) {
