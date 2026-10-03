@@ -442,6 +442,32 @@ await check(
           actions.y + actions.height <= support.y + 1,
           `${width}: actions overlap support`,
         );
+        if (width <= 700) {
+          assert.ok(
+            support.y - actions.y - actions.height < 80,
+            `${width}: excessive mobile hero gap`,
+          );
+        }
+      }
+      if (width <= 700) {
+        await page.setViewportSize({ width, height: 1200 });
+        assert.equal(
+          (await page.locator(".hero-carousel").boundingBox()).height,
+          initial.height,
+          `${width}: hero stretches with screen height`,
+        );
+        const alignment = await page
+          .locator(".utility-links")
+          .evaluate((el) => {
+            const children = [...el.children].map((child) =>
+              child.getBoundingClientRect(),
+            );
+            return children.map((r) => r.y + r.height / 2);
+          });
+        assert.ok(
+          Math.max(...alignment) - Math.min(...alignment) < 2,
+          `${width}: utility links are not vertically centered`,
+        );
       }
     }
   },

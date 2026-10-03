@@ -8,6 +8,8 @@ Verified against the local refinement and subsequent visual polish on 3 October 
 
 ## Browser checks
 
+The follow-up mobile pass removes viewport-driven hero height on stacked layouts. Regression checks now assert that support sits within 80 px of each scene's actions, changing a phone's height to 1200 px does not stretch the hero, and utility links share a vertical center. Mobile top-bar text and enlarged text wrap without overflow. Small section text and footer links have increased size and spacing.
+
 The optional `scripts/check-browser.mjs` passes all 16 checks against the production preview using headless Chromium and the existing Playwright installation. No console errors or page errors were recorded. `browser-results.json` records the final results.
 
 - All 18 routes pass horizontal overflow and landmark checks at 320, 375, 390, 768, 1024 and 1440 px: 108 viewport/route combinations.

@@ -4,6 +4,8 @@ Reviewed 3 October 2026, following the user's request to hide the carousel and h
 
 ## Decisions
 
+- Follow-up mobile refinement: the utility bar uses consistent readable text sizes and centered link alignment, with wrapping at 200% text. Mobile and tablet heroes follow their content instead of filling the viewport; support sits in normal flow below the shared slide stage. The stage still reserves the tallest scene to avoid movement during rotation. Small body text in resources, capabilities, FAQs and the footer is enlarged, and footer links have more usable spacing. Desktop hero framing remains unchanged.
+
 - The desktop homepage identity and navigation now sit over the authentic vehicle scene. The utility bar retains government affiliation, language access, text enlargement and the concept label. Navigation becomes a solid navy strip as the page scrolls. Supporting pages retain their white government masthead.
 - Mobile utility links share a deliberate left baseline. Identity, official marks, search and menu are aligned in a compact row, with a smaller text treatment at 320 px and content-driven expansion at 200% text.
 - The hero's arrows and numbered control row are removed. Both systems rotate automatically in normal browsing. Their pause controls are visually hidden and become visible on keyboard focus, preserving access for keyboard and screen-reader users. Keyboard slide navigation, touch swipe, focus pause, reduced motion, document visibility and offscreen protections remain. A swipe without keyboard focus resets the normal rotation interval; keyboard navigation retains its explicit-resume behavior.
