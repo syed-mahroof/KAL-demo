@@ -66,7 +66,7 @@ if (carousel) {
       source.srcset = source.dataset.srcset;
       source.removeAttribute("data-srcset");
     });
-    const img = slide.querySelector("img");
+    const img = slide.querySelector(".hero-image");
     if (img.dataset.src) {
       img.loading = "eager";
       img.src = img.dataset.src;
@@ -92,6 +92,14 @@ if (carousel) {
       item.setAttribute("aria-hidden", String(i !== current));
       item.toggleAttribute("data-active", i === current);
     });
+    carousel
+      .querySelectorAll("[data-hero-select]")
+      .forEach((button) =>
+        button.setAttribute(
+          "aria-pressed",
+          String(Number(button.dataset.heroSelect) === current),
+        ),
+      );
     if (changed && !reducedMotion.matches) {
       previous.setAttribute("data-leaving", "");
       const options = {
@@ -123,6 +131,12 @@ if (carousel) {
     if (manual) status.textContent = slide.getAttribute("aria-label");
     schedule();
   }
+  carousel.querySelectorAll("[data-hero-select]").forEach((button) =>
+    button.addEventListener("click", () => {
+      setPaused(true);
+      show(Number(button.dataset.heroSelect), true);
+    }),
+  );
   pauseButton.addEventListener("pointerdown", () => {
     pauseIntent = !paused;
   });

@@ -1,14 +1,20 @@
+import { products } from "./data.mjs";
+import { vehicleVisual } from "./vehicle-visual.mjs";
 const slides = [
   {
     image: "hero-neem",
     alt: "Blue Kerala Neem G electric passenger three-wheeler, shown in full",
     eyebrow: "Made in Kerala. Moving forward.",
-    title: "Kerala’s own. <span>Electric by design.</span>",
-    copy: "Passenger journeys, local deliveries and public service. Electric vehicles built in Kerala, for the work of every day.",
-    button: "Discover our vehicles",
-    link: "/products/",
-    secondary: "Get to know KAL",
-    secondaryLink: "/about/",
+    title: "Kerala<span>Neem G.</span>",
+    copy: "Your next journey. All electric. All Kerala.",
+    facts: [
+      ["Published range", "90–100 km"],
+      ["Seating", "Driver + 3"],
+    ],
+    button: "Explore Neem G",
+    link: "/products/kerala-neem-g/",
+    secondary: "Enquire now",
+    secondaryLink: "/contact/?vehicle=Kerala%20Neem%20G#enquiry",
     vehicle: "Kerala Neem G",
     purpose: "All-electric passenger mobility",
     label: "Passenger",
@@ -17,8 +23,12 @@ const slides = [
     image: "hero-utility",
     alt: "Blue KAL electric waste collection cart with separate waste compartments",
     eyebrow: "Built for our communities.",
-    title: "Clean streets. <span>Powered by KAL.</span>",
-    copy: "Purpose-built electric utility vehicles for the work that keeps our communities moving. Practical engineering, with a cleaner way forward.",
+    title: "Clean streets.<span>Electric drive.</span>",
+    copy: "Purpose-built for the work that moves our communities.",
+    facts: [
+      ["Collection", "Dry + wet"],
+      ["Tipping", "Hydraulic"],
+    ],
     button: "Explore utility vehicles",
     link: "/products/?category=utility",
     secondary: "Enquire with KAL",
@@ -31,8 +41,12 @@ const slides = [
     image: "hero-cargo",
     alt: "Blue Kerala Green Stream electric goods cart with its open cargo bed visible",
     eyebrow: "For the business of every day.",
-    title: "Local journeys. <span>Electric possibilities.</span>",
-    copy: "From local deliveries to goods transport, Kerala Green Stream brings electric mobility to your everyday business. Designed and made in Kerala.",
+    title: "Kerala<span>Green Stream.</span>",
+    copy: "Carry your business forward. Leave less behind.",
+    facts: [
+      ["Published range", "100–130 km"],
+      ["Load capacity", "Up to 310 kg"],
+    ],
     button: "Explore goods vehicles",
     link: "/products/?category=goods",
     secondary: "Talk to our team",
@@ -73,26 +87,6 @@ export function heroCarousel() {
                 aria-label="${index + 1} of ${slides.length}: ${slide.vehicle}"
                 ${index ? "hidden" : ""}
               >
-                <picture>
-                  <source
-                    media="(max-width: 700px)"
-                    ${index ? "data-srcset" : "srcset"}="/images/${slide.image}-mobile.webp"
-                  />
-                  <source
-                    media="(max-width: 1100px)"
-                    ${index ? "data-srcset" : "srcset"}="/images/${slide.image}-small.webp"
-                  />
-                  <img
-                    class="hero-image"
-                    ${index ? "data-src" : "src"}="/images/${slide.image}.webp"
-                    alt="${slide.alt}"
-                    width="1840"
-                    height="884"
-                    ${index ? 'loading="lazy"' : 'fetchpriority="high"'}
-                    decoding="async"
-                  />
-                </picture>
-                <div class="hero-shade"></div>
                 <div class="container hero-inner">
                   <div class="hero-copy">
                     <span class="hero-eyebrow"
@@ -100,6 +94,14 @@ export function heroCarousel() {
                     >
                     <h2>${slide.title}</h2>
                     <p>${slide.copy}</p>
+                  </div>
+                  <div class="hero-visual">
+                    ${vehicleVisual(products[[0, 2, 1][index]], { context: "hero", eager: index === 0, deferred: index !== 0 })}
+                  </div>
+                  <div class="hero-details">
+                    <dl class="hero-facts">
+                      ${slide.facts.map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join("")}
+                    </dl>
                     <div class="hero-actions">
                       <a class="button button-white" href="${slide.link}"
                         >${slide.button}</a
@@ -108,10 +110,6 @@ export function heroCarousel() {
                         >${slide.secondary} <span aria-hidden="true">↗</span></a
                       >
                     </div>
-                  </div>
-                  <div class="hero-product">
-                    <span>${slide.vehicle}</span
-                    ><strong>${slide.purpose}</strong>
                   </div>
                 </div>
               </div>
@@ -136,6 +134,9 @@ export function heroCarousel() {
         >
       </div>
       <div class="container hero-controls" hidden>
+        <div class="hero-models" role="group" aria-label="Choose vehicle scene">
+          ${slides.map((slide, index) => `<button data-hero-select="${index}" aria-pressed="${index === 0}"><span class="hero-model-number">0${index + 1}</span>${slide.label}</button>`).join("")}
+        </div>
         <button
           class="hero-motion-toggle motion-access"
           data-carousel-pause

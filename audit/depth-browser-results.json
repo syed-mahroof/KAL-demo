@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-06",
+  "checks": [
+    "Viewport and route matrix",
+    "Five homepage portraits remain visible on mobile and desktop",
+    "Nine model stages display complete cutouts with intrinsic dimensions",
+    "Header alignment, portrait frames and intrinsic image dimensions",
+    "Single-row filters, category query and readable buyer facts",
+    "Mobile menu, grouping, Escape and focus restoration",
+    "Search, empty result, Escape and focus restoration",
+    "Gallery navigation, keyboard, homepage preview and focus restoration",
+    "Enquiry preselection, validation and local draft only",
+    "Vehicle comparison, missing figures and identical selections",
+    "Fleet and dealership enquiry entry paths",
+    "Official video destination and model specification download",
+    "200% text across all routes at 320 and 1440",
+    "Hero slide geometry, visible scene controls and image framing",
+    "Autoplay over imagery, action hover, persistent focus/manual pause, swipe and explicit resume",
+    "Trust rotation, stable slots, unique items, offscreen pause and user pause",
+    "Offscreen hero and simulated hidden-tab pause",
+    "Reduced motion disables both rotations",
+    "Official notice and nine detail specifications",
+    "Static first slide without JavaScript",
+    "Representative screenshots"
+  ],
+  "failures": [],
+  "errors": []
+}

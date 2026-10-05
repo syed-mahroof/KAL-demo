@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { layout, home } from "../src/templates.mjs";
 import { products } from "../src/data.mjs";
+import { specificationSummary } from "../src/showroom.mjs";
 import {
   about,
   catalog,
@@ -100,6 +101,13 @@ await writeFile(
   }),
 );
 await mkdir("public", { recursive: true });
+await mkdir("public/downloads", { recursive: true });
+for (const product of products) {
+  await writeFile(
+    `public/downloads/KAL-${product.slug}-specifications.txt`,
+    specificationSummary(product),
+  );
+}
 const origin = process.env.SITE_URL?.replace(/\/$/, "");
 const production = process.env.PRODUCTION_SITE === "true";
 if (production && !origin)

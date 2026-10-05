@@ -17,6 +17,8 @@
         <link rel="icon" href="/images/favicon.webp" type="image/webp" />
         <link rel="stylesheet" href="/fonts/fonts.css" />
         <link rel="stylesheet" href="/src/style.css" />
+        <link rel="stylesheet" href="/src/premium.css" />
+        <link rel="stylesheet" href="/src/depth.css" />
         <script type="module" src="/src/main.js"></script>
       </head>
       <body class="inner-page">
@@ -37,8 +39,8 @@
             aria-label="Increase text size"
             aria-pressed="false"
           >
-            A<span>+</span></button
-          ><span class="concept-label">Website concept</span>
+            A<span>+</span>
+          </button>
         </div>
       </div>
     </div>
@@ -46,18 +48,13 @@
       <div class="container masthead">
         <a class="brand" href="/"
           ><img
-            src="/images/kerala-emblem.webp"
-            alt="Government of Kerala emblem"
-            width="62"
-            height="58"
-          /><img
             src="/images/kal-logo.webp"
             alt="KAL logo"
             width="70"
             height="50"
           /><span class="brand-text"
             ><strong>Kerala Automobiles Limited</strong
-            ><span>Department of Industries & Commerce</span></span
+            ><span>Government of Keralam undertaking</span></span
           ></a
         >
         <div class="masthead-actions">
@@ -130,9 +127,27 @@
               <div class="dropdown-panel dropdown-right">
                 <a href="/contact/">Contact & support</a
                 ><a href="/contact/#enquiry">Vehicle enquiry</a
+                ><a href="/contact/?purpose=fleet#enquiry">Fleet enquiries</a
+                ><a href="/contact/?purpose=dealer#enquiry">Become a dealer</a
                 ><a class="" href="https://kal.kerala.gov.in/dealer-details" target="_blank" rel="noopener noreferrer">Dealer network<svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3h7v7m0-7L10 14M10 3H3v18h18v-7"/></svg></a>
               </div>
             </details>
+            <div class="nav-tools">
+              <a
+                href="https://kal.kerala.gov.in/malayalam/"
+                lang="ml"
+                target="_blank"
+                rel="noopener noreferrer"
+                >മലയാളം</a
+              ><button
+                class="text-control"
+                data-text-size
+                aria-label="Increase text size"
+                aria-pressed="false"
+              >
+                A<span>+</span>
+              </button>
+            </div>
           </nav>
           <a class="button button-small" href="/contact/#enquiry"
             >Enquire now</a
@@ -208,10 +223,20 @@
           <span class="eyebrow" id="enquiry">Vehicle enquiry</span>
           <h2>Tell us what you need.</h2>
           <p>
-            This demo prepares an enquiry draft for you to review. It does not
+            Prepare an enquiry draft for you to review. This form does not
             submit or store your details.
           </p>
           <div class="form-grid">
+            <div class="form-field full">
+              <label for="enquiry-purpose">How can we help?</label
+              ><select id="enquiry-purpose" name="purpose">
+                <option value="vehicle">Buying a vehicle</option>
+                <option value="fleet">
+                  Fleet or public-service requirement
+                </option>
+                <option value="dealer">Dealership enquiry</option>
+              </select>
+            </div>
             <div class="form-field">
               <label for="enquiry-name"
                 >Full name <span aria-hidden="true">*</span></label
@@ -311,10 +336,9 @@
         <span class="eyebrow">Accessibility</span>
         <h2>Designed for easier access.</h2>
         <p>
-          This demonstration supports keyboard navigation, visible focus
-          indicators, a skip link, readable text, responsive layouts and
-          reduced-motion preferences. Use the A+ control in the header to
-          enlarge text.
+          This website supports keyboard navigation, visible focus indicators, a
+          skip link, readable text, responsive layouts and reduced-motion
+          preferences. Use the A+ control in the navigation to enlarge text.
         </p>
         <p>
           For help accessing KAL information, contact
@@ -353,6 +377,24 @@
             Aralumoodu P.O., Neyyattinkara<br />Thiruvananthapuram, Kerala · 695
             123
           </p>
+          <div class="social-links" aria-label="KAL social channels">
+            <a
+              href="https://www.instagram.com/kal__md/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Instagram <svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3h7v7m0-7L10 14M10 3H3v18h18v-7"/></svg></a
+            ><a
+              href="https://www.facebook.com/KeralaAutomobilesLimited"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Facebook <svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3h7v7m0-7L10 14M10 3H3v18h18v-7"/></svg></a
+            ><a
+              href="https://www.youtube.com/@kalofficial-r7l/videos"
+              target="_blank"
+              rel="noopener noreferrer"
+              >YouTube <svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3h7v7m0-7L10 14M10 3H3v18h18v-7"/></svg></a
+            >
+          </div>
         </div>
         <div>
           <h3>Explore KAL</h3>
@@ -378,12 +420,9 @@
         </div>
       </div>
       <div class="container footer-bottom">
-        <p>
-          © 2026 Kerala Automobiles Limited · Design
-          demonstration
-        </p>
+        <p>© 2026 Kerala Automobiles Limited</p>
         <a href="https://kal.kerala.gov.in" target="_blank" rel="noopener noreferrer"
-          >Visit current official website <svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3h7v7m0-7L10 14M10 3H3v18h18v-7"/></svg></a
+          >Official KAL website <svg class="icon " width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3h7v7m0-7L10 14M10 3H3v18h18v-7"/></svg></a
         ><a href="/contact/#accessibility">Accessibility</a>
       </div>
     </footer>

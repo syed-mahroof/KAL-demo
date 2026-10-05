@@ -1,0 +1,17 @@
+{
+  "keyboardMotion": {
+    "resumePressed": "false",
+    "pausePressed": "true",
+    "focusedClip": "none",
+    "ordinaryClip": "inset(50%)"
+  },
+  "menuEscape": "closed and focus restored",
+  "searchNeem": "1 result",
+  "goodsFilter": "1 vehicle shown",
+  "allFilterReset": {
+    "scrollLeft": 0,
+    "visibleCards": 3
+  },
+  "comparison": "Green Stream first, Neem G second",
+  "desktopHover": "matrix3d applied to image stage"
+}

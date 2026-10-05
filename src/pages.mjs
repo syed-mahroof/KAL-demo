@@ -1,4 +1,12 @@
 import { products, official, galleryPhotos, boardLeaders } from "./data.mjs";
+import { vehicleVisual } from "./vehicle-visual.mjs";
+import {
+  buyerFacts,
+  ownershipSection,
+  comparisonSection,
+  videoSection,
+  dealerSection,
+} from "./showroom.mjs";
 import {
   image,
   icon,
@@ -100,7 +108,7 @@ export function about() {
     </section>`;
 }
 export function catalog() {
-  return /* HTML */ `${pageHero("Our vehicles", "Electric vehicles, made for you.", "Explore the KERALA range of electric passenger vehicles, goods carts and utility vehicles. Select a category to find the right fit.")}${productSection(true)}${faq}`;
+  return /* HTML */ `${pageHero("The KERALA electric range", "Different work.<br>One electric future.", "Passenger journeys, local deliveries and community services. Find the KAL vehicle that fits your working day.")}${productSection(true)}${comparisonSection()}${ownershipSection()}${dealerSection()}${faq}`;
 }
 export function productDetail(product) {
   const specs = [
@@ -118,37 +126,120 @@ export function productDetail(product) {
         ]
       : []),
   ];
-  return /* HTML */ `${pageHero("Our vehicles", escape(product.name), product.description)}
-    <section class="section">
-      <div class="container product-detail-grid">
-        <div class="product-detail-image">
-          ${image(product.image, product.name, "", true)}
+  const enquiry = `/contact/?vehicle=${encodeURIComponent(product.name)}#enquiry`;
+  const headline =
+    product.category === "goods"
+      ? "For the business<br>of every day."
+      : product.category === "utility"
+        ? "Practical purpose.<br>Electric possibilities."
+        : "More ways<br>to move people.";
+  const scene = {
+    "kerala-neem-g": "hero-neem",
+    "kerala-green-stream-e-cart": "hero-cargo",
+    "e-cart-with-garbage-box-having-dry-and-wet-compartments-hydraulic-tipping-mechanism":
+      "hero-utility",
+  }[product.slug];
+  return /* HTML */ `<section class="vehicle-reveal">
+      <div class="container">
+        <nav class="vehicle-breadcrumb" aria-label="Breadcrumb">
+          <a href="/products/">Our vehicles</a><span aria-hidden="true">/</span
+          ><span>${escape(product.name)}</span>
+        </nav>
+        <div class="vehicle-title">
+          <span class="eyebrow">${escape(product.label)} · All electric</span>
+          <h1>${escape(product.name)}</h1>
+          <p>${product.description}</p>
         </div>
-        <div class="product-detail-copy">
-          <span class="eyebrow">${product.label}</span>
-          <h2>Designed for the<br />work of every day.</h2>
-          <p>
-            ${product.intro || product.description + " Contact KAL’s sales team for the current configuration, availability and a complete specification sheet."}
-          </p>
-          <dl class="detail-specs">
-            ${specs.map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join("")}
+        <div class="vehicle-stage">
+          ${vehicleVisual(product, { context: "detail", eager: true })}<span
+            class="stage-caption"
+            >Made in Kerala. Moving forward.</span
+          >
+        </div>
+        <div class="vehicle-first-facts">
+          <dl>
+            ${buyerFacts(product)
+              .map(
+                ([label, value]) =>
+                  `<div><dt>${label}</dt><dd>${escape(value)}</dd></div>`,
+              )
+              .join(
+                "",
+              )}${product.charge ? `<div><dt>Charging time</dt><dd>${product.charge}</dd></div>` : `<div><dt>Peak torque</dt><dd>${product.torque}</dd></div>`}
           </dl>
-          <p class="spec-note">
-            Specifications reproduced from KAL’s website for this demonstration.
-            Range and performance depend on operating conditions. Confirm the
-            latest specifications and availability with KAL.
+          <a class="button" href="${enquiry}"
+            >Enquire about this vehicle ${icon("external")}</a
+          >
+        </div>
+        ${product.range ? '<p class="spec-note">Published range and charging figures. Actual performance depends on operating conditions.</p>' : ""}
+      </div>
+    </section>
+    <nav class="vehicle-nav" aria-label="Vehicle page sections">
+      <div class="container">
+        <a href="#vehicle-story">Overview</a
+        ><a href="#specifications">Specifications</a
+        ><a href="#ownership">Ownership</a
+        ><a href="${enquiry}">Enquire ${icon("external")}</a>
+      </div>
+    </nav>
+    <section class="section vehicle-story" id="vehicle-story">
+      <div class="container vehicle-story-grid">
+        <div>
+          <span class="eyebrow">Designed around your work</span>
+          <h2>${headline}</h2>
+          <p>${product.intro || product.description}</p>
+          <a class="text-link" href="${enquiry}"
+            >Talk through your requirements ${icon("external")}</a
+          >
+        </div>
+        <figure>
+          ${scene ? `<picture><source media="(max-width:700px)" srcset="/images/${scene}-mobile.webp"><img src="/images/${scene}-small.webp" width="960" height="461" alt="${escape(product.name)} vehicle scene" loading="lazy" decoding="async"></picture>` : image(product.image, product.name)}
+          <figcaption>
+            ${escape(product.name)} · ${escape(product.label)}
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+    ${product.slug.includes("garbage-box") ? videoSection() : ""}
+    <section class="section vehicle-specification-section" id="specifications">
+      <div class="container specification-grid">
+        <div>
+          <span class="eyebrow">Know the details</span>
+          <h2>Built with purpose.<br />Specified clearly.</h2>
+          <p>
+            Published specifications for ${escape(product.name)}. Confirm
+            current configuration and availability with KAL.
           </p>
           <a
-            class="button"
-            href="/contact/?vehicle=${encodeURIComponent(product.name)}#enquiry"
-            >Enquire about this vehicle</a
+            class="button button-outline"
+            data-download-spec="${product.slug}"
+            href="/downloads/KAL-${product.slug}-specifications.txt"
+            download
           >
-          <p>
-            ${external("/products/" + product.slug, "View current official specifications", "text-link")}
+            Download specification summary ${icon("document")}
+          </a>
+          <p class="spec-note">
+            Text file · Published figures and KAL contact details
+          </p>
+          ${external("/products/" + product.slug, "View current official specifications", "text-link")}
+        </div>
+        <div>
+          <dl class="detail-specs">
+            ${specs.map(([label, value]) => `<div><dt>${label}</dt><dd>${escape(value)}</dd></div>`).join("")}
+          </dl>
+          <p class="spec-note">
+            Gross vehicle weight includes the vehicle and its permitted load; it
+            is not payload. Range and performance depend on operating
+            conditions.${!product.range ? " Contact KAL for range, capacity, charging and warranty details for this model." : ""}
           </p>
         </div>
       </div>
     </section>
+    ${ownershipSection(product)}
+    <div class="mobile-buy-bar">
+      <a href="tel:+919778466292">${icon("phone")}Call sales</a
+      ><a href="${enquiry}">Enquire ${icon("external")}</a>
+    </div>
     <section class="section related-section">
       <div class="container">
         <div class="section-heading">
@@ -168,7 +259,7 @@ export function productDetail(product) {
             .join("")}
         </div>
       </div>
-    </section>`;
+    </section>`.replace(/[ \t]+$/gm, "");
 }
 export function manufacturing() {
   return /* HTML */ `${pageHero("Manufacturing", "On our roads.<br>In our space programmes.", "Electric vehicle manufacturing and high-precision aerospace machining, from KAL’s Aralumoodu facility in Thiruvananthapuram.")}
@@ -412,10 +503,20 @@ export function contact() {
           <span class="eyebrow" id="enquiry">Vehicle enquiry</span>
           <h2>Tell us what you need.</h2>
           <p>
-            This demo prepares an enquiry draft for you to review. It does not
+            Prepare an enquiry draft for you to review. This form does not
             submit or store your details.
           </p>
           <div class="form-grid">
+            <div class="form-field full">
+              <label for="enquiry-purpose">How can we help?</label
+              ><select id="enquiry-purpose" name="purpose">
+                <option value="vehicle">Buying a vehicle</option>
+                <option value="fleet">
+                  Fleet or public-service requirement
+                </option>
+                <option value="dealer">Dealership enquiry</option>
+              </select>
+            </div>
             <div class="form-field">
               <label for="enquiry-name"
                 >Full name <span aria-hidden="true">*</span></label
@@ -515,10 +616,9 @@ export function contact() {
         <span class="eyebrow">Accessibility</span>
         <h2>Designed for easier access.</h2>
         <p>
-          This demonstration supports keyboard navigation, visible focus
-          indicators, a skip link, readable text, responsive layouts and
-          reduced-motion preferences. Use the A+ control in the header to
-          enlarge text.
+          This website supports keyboard navigation, visible focus indicators, a
+          skip link, readable text, responsive layouts and reduced-motion
+          preferences. Use the A+ control in the navigation to enlarge text.
         </p>
         <p>
           For help accessing KAL information, contact

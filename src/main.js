@@ -1,4 +1,5 @@
-import { searchItems } from "./data.mjs";
+import { searchItems, products } from "./data.mjs";
+import { vehicleVisual } from "./vehicle-visual.mjs";
 import "./carousel.js";
 import "./trust.js";
 
@@ -34,7 +35,6 @@ const headerParts = [
   header.querySelector(".masthead"),
 ];
 function measureHeader() {
-  const mobile = getComputedStyle(menuToggle).display !== "none";
   const mastheadHeight = headerParts[1].getBoundingClientRect().height;
   document.documentElement.style.setProperty(
     "--utility-height",
@@ -45,13 +45,8 @@ function measureHeader() {
     `${mastheadHeight}px`,
   );
   const height =
-    headerParts.reduce(
-      (sum, part) => sum + part.getBoundingClientRect().height,
-      0,
-    ) +
-    (mobile
-      ? 0
-      : header.querySelector(".nav-wrap").getBoundingClientRect().height);
+    headerParts[0].getBoundingClientRect().height +
+    header.getBoundingClientRect().height;
   document.documentElement.style.setProperty("--header-height", `${height}px`);
 }
 new ResizeObserver(measureHeader).observe(header);
@@ -82,15 +77,19 @@ document.addEventListener("keydown", (event) => {
     setMenu(false, true);
   }
 });
-const textControl = document.querySelector("[data-text-size]");
-textControl?.addEventListener("click", () => {
-  const enlarged = document.documentElement.classList.toggle("large-text");
-  textControl.setAttribute("aria-pressed", String(enlarged));
-  textControl.setAttribute(
-    "aria-label",
-    enlarged ? "Restore default text size" : "Increase text size",
-  );
-});
+const textControls = document.querySelectorAll("[data-text-size]");
+textControls.forEach((control) =>
+  control.addEventListener("click", () => {
+    const enlarged = document.documentElement.classList.toggle("large-text");
+    textControls.forEach((textControl) => {
+      textControl.setAttribute("aria-pressed", String(enlarged));
+      textControl.setAttribute(
+        "aria-label",
+        enlarged ? "Restore default text size" : "Increase text size",
+      );
+    });
+  }),
+);
 document.querySelectorAll("[data-filter]").forEach((button) => {
   button.addEventListener("click", () => {
     const section = button.closest(".products-section");
@@ -107,6 +106,9 @@ document.querySelectorAll("[data-filter]").forEach((button) => {
     });
     section.querySelector(".filter-status").textContent =
       `${count} ${count === 1 ? "vehicle" : "vehicles"} shown.`;
+    section
+      .querySelector(".product-grid")
+      .scrollTo({ left: 0, behavior: "instant" });
     const strip = button.closest(".filters");
     const bounds = button.getBoundingClientRect(),
       stripBounds = strip.getBoundingClientRect();
@@ -276,6 +278,11 @@ motionPreference.addEventListener("change", () => {
 
 const form = document.querySelector("#enquiry-form");
 if (form) {
+  const purpose = new URLSearchParams(location.search).get("purpose");
+  if (["fleet", "dealer"].includes(purpose)) {
+    form.elements.purpose.value = purpose;
+    form.elements.vehicle.value = "Help choosing a vehicle";
+  }
   const selected = new URLSearchParams(location.search).get("vehicle");
   if (
     selected &&
@@ -288,12 +295,13 @@ if (form) {
     event.preventDefault();
     if (!form.reportValidity()) return;
     const fields = new FormData(form);
-    const text = `Vehicle enquiry: ${fields.get("vehicle")}\n\nName: ${fields.get("name")}\nEmail: ${fields.get("email")}\nPhone: ${fields.get("phone")}\n\n${fields.get("message")}\n\nPrepared using the KAL website design demonstration.`;
+    const purposeLabel = form.elements.purpose.selectedOptions[0].textContent;
+    const text = `${purposeLabel}: ${fields.get("vehicle")}\n\nName: ${fields.get("name")}\nEmail: ${fields.get("email")}\nPhone: ${fields.get("phone")}\n\n${fields.get("message")}\n\nPrepared for Kerala Automobiles Limited.`;
     const preview = document.querySelector(".enquiry-preview");
     preview.hidden = false;
     preview.querySelector("pre").textContent = text;
     const email = preview.querySelector("[data-email-draft]");
-    email.href = `mailto:marketingexe.kal@kerala.gov.in?subject=${encodeURIComponent(`Vehicle enquiry: ${fields.get("vehicle")}`)}&body=${encodeURIComponent(text)}`;
+    email.href = `mailto:marketingexe.kal@kerala.gov.in?subject=${encodeURIComponent(`${purposeLabel}: ${fields.get("vehicle")}`)}&body=${encodeURIComponent(text)}`;
     preview.querySelector("[data-download-enquiry]").onclick = () => {
       const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
       const url = URL.createObjectURL(blob);
@@ -312,3 +320,69 @@ if (form) {
     document.querySelector(".form-status").textContent = "";
   });
 }
+
+document.querySelectorAll("[data-compare]").forEach((select) => {
+  select.addEventListener("change", () => {
+    const product = products.find((item) => item.slug === select.value);
+    const slot = select.dataset.compare;
+    if (!product) return;
+    const head = document.querySelector(`[data-comparison-head="${slot}"]`);
+    head.querySelector(".comparison-photo").innerHTML = vehicleVisual(product, { context: "compare" });
+    head.querySelector("h3").textContent = product.name;
+    head.querySelector("a").href = `/products/${product.slug}/`;
+    document
+      .querySelectorAll(`[data-compare-cell="${slot}"]`)
+      .forEach((cell) => {
+        cell.textContent = product[cell.dataset.spec] || "Confirm with KAL";
+      });
+    const names = [...document.querySelectorAll("[data-compare]")].map(
+      (item) => products.find((p) => p.slug === item.value)?.name,
+    );
+    document.querySelector(".comparison-note").textContent =
+      names[0] === names[1]
+        ? "Both selections show the same vehicle. Choose another model to compare."
+        : `Comparing ${names[0]} and ${names[1]}.`;
+  });
+});
+
+// A card's comparison link carries that vehicle into the first comparison slot.
+const initialComparison = new URLSearchParams(location.search).get("compare");
+const firstComparison = document.querySelector('[data-compare="0"]');
+if (firstComparison && products.some((p) => p.slug === initialComparison)) {
+  firstComparison.value = initialComparison;
+  const second = document.querySelector('[data-compare="1"]');
+  if (second.value === initialComparison) {
+    second.value = products.find((p) => p.slug !== initialComparison).slug;
+    second.dispatchEvent(new Event("change"));
+  }
+  firstComparison.dispatchEvent(new Event("change"));
+}
+
+// Small photographic depth on precise pointers; touch and reduced motion stay still.
+const cardPointer = matchMedia("(hover: hover) and (pointer: fine)");
+document.querySelectorAll(".product-card").forEach((card) => {
+  let frame;
+  const reset = () => {
+    cancelAnimationFrame(frame);
+    card.style.removeProperty("--card-x");
+    card.style.removeProperty("--card-y");
+  };
+  card.addEventListener(
+    "pointermove",
+    (event) => {
+      if (!cardPointer.matches || motionPreference.matches) return;
+      const bounds = card.getBoundingClientRect();
+      const x = (event.clientX - bounds.left) / bounds.width - 0.5;
+      const y = (event.clientY - bounds.top) / bounds.height - 0.5;
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        card.style.setProperty("--card-x", `${(x * 5).toFixed(2)}deg`);
+        card.style.setProperty("--card-y", `${(-y * 4).toFixed(2)}deg`);
+      });
+    },
+    { passive: true },
+  );
+  card.addEventListener("pointerleave", reset);
+  cardPointer.addEventListener("change", reset);
+  motionPreference.addEventListener("change", reset);
+});

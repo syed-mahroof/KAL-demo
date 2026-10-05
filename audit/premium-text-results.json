@@ -1,0 +1,240 @@
+[
+  {
+    "route": "/",
+    "width": 320,
+    "client": 305,
+    "root": "32px",
+    "total": 305
+  },
+  {
+    "route": "/about/",
+    "width": 320,
+    "client": 305,
+    "root": "32px",
+    "total": 305
+  },
+  {
+    "route": "/products/",
+    "width": 320,
+    "client": 305,
+    "root": "32px",
+    "total": 305
+  },
+  {
+    "route": "/manufacturing/",
+    "width": 320,
+    "client": 305,
+    "root": "32px",
+    "total": 305
+  },
+  {
+    "route": "/public-information/",
+    "width": 320,
+    "client": 305,
+    "root": "32px",
+    "total": 305
+  },
+  {
+    "route": "/news/",
+    "width": 320,
+    "client": 305,
+    "root": "32px",
+    "total": 305
+  },
+  {
+    "route": "/gallery/",
+    "width": 320,
+    "client": 305,
+    "root": "32px",
+    "total": 305
+  },
+  {
+    "route": "/contact/",
+    "width": 320,
+    "client": 305,
+    "root": "32px",
+    "total": 305
+  },
+  {
+    "route": "/products/kerala-neem-g/",
+    "width": 320,
+    "client": 305,
+    "root": "32px",
+    "total": 305
+  },
+  {
+    "route": "/products/kerala-green-stream-e-cart/",
+    "width": 320,
+    "client": 305,
+    "root": "32px",
+    "total": 305
+  },
+  {
+    "route": "/products/e-cart-with-garbage-box-having-dry-and-wet-compartments-hydraulic-tipping-mechanism/",
+    "width": 320,
+    "client": 305,
+    "root": "32px",
+    "total": 305
+  },
+  {
+    "route": "/products/e-cart-with-canopy/",
+    "width": 320,
+    "client": 305,
+    "root": "32px",
+    "total": 305
+  },
+  {
+    "route": "/products/e-cart-with-carriage-box-hydraulic-tipping-mechanism/",
+    "width": 320,
+    "client": 305,
+    "root": "32px",
+    "total": 305
+  },
+  {
+    "route": "/products/kal-mini-e-cart/",
+    "width": 320,
+    "client": 305,
+    "root": "32px",
+    "total": 305
+  },
+  {
+    "route": "/products/kal-ice-cream-e-cart/",
+    "width": 320,
+    "client": 305,
+    "root": "32px",
+    "total": 305
+  },
+  {
+    "route": "/products/kal-electric-buggy/",
+    "width": 320,
+    "client": 305,
+    "root": "32px",
+    "total": 305
+  },
+  {
+    "route": "/products/kal-mini-e-cart-plus/",
+    "width": 320,
+    "client": 305,
+    "root": "32px",
+    "total": 305
+  },
+  {
+    "route": "/",
+    "width": 1440,
+    "client": 1425,
+    "root": "32px",
+    "total": 1425
+  },
+  {
+    "route": "/about/",
+    "width": 1440,
+    "client": 1425,
+    "root": "32px",
+    "total": 1425
+  },
+  {
+    "route": "/products/",
+    "width": 1440,
+    "client": 1425,
+    "root": "32px",
+    "total": 1425
+  },
+  {
+    "route": "/manufacturing/",
+    "width": 1440,
+    "client": 1425,
+    "root": "32px",
+    "total": 1425
+  },
+  {
+    "route": "/public-information/",
+    "width": 1440,
+    "client": 1425,
+    "root": "32px",
+    "total": 1425
+  },
+  {
+    "route": "/news/",
+    "width": 1440,
+    "client": 1425,
+    "root": "32px",
+    "total": 1425
+  },
+  {
+    "route": "/gallery/",
+    "width": 1440,
+    "client": 1425,
+    "root": "32px",
+    "total": 1425
+  },
+  {
+    "route": "/contact/",
+    "width": 1440,
+    "client": 1425,
+    "root": "32px",
+    "total": 1425
+  },
+  {
+    "route": "/products/kerala-neem-g/",
+    "width": 1440,
+    "client": 1425,
+    "root": "32px",
+    "total": 1425
+  },
+  {
+    "route": "/products/kerala-green-stream-e-cart/",
+    "width": 1440,
+    "client": 1425,
+    "root": "32px",
+    "total": 1425
+  },
+  {
+    "route": "/products/e-cart-with-garbage-box-having-dry-and-wet-compartments-hydraulic-tipping-mechanism/",
+    "width": 1440,
+    "client": 1425,
+    "root": "32px",
+    "total": 1425
+  },
+  {
+    "route": "/products/e-cart-with-canopy/",
+    "width": 1440,
+    "client": 1425,
+    "root": "32px",
+    "total": 1425
+  },
+  {
+    "route": "/products/e-cart-with-carriage-box-hydraulic-tipping-mechanism/",
+    "width": 1440,
+    "client": 1425,
+    "root": "32px",
+    "total": 1425
+  },
+  {
+    "route": "/products/kal-mini-e-cart/",
+    "width": 1440,
+    "client": 1425,
+    "root": "32px",
+    "total": 1425
+  },
+  {
+    "route": "/products/kal-ice-cream-e-cart/",
+    "width": 1440,
+    "client": 1425,
+    "root": "32px",
+    "total": 1425
+  },
+  {
+    "route": "/products/kal-electric-buggy/",
+    "width": 1440,
+    "client": 1425,
+    "root": "32px",
+    "total": 1425
+  },
+  {
+    "route": "/products/kal-mini-e-cart-plus/",
+    "width": 1440,
+    "client": 1425,
+    "root": "32px",
+    "total": 1425
+  }
+]

@@ -1,13 +1,19 @@
 import {
   products,
   official,
-  galleryPhotos,
   governmentLeaders,
   boardLeaders,
   trustFacts,
   recruitment,
 } from "./data.mjs";
 import { heroCarousel } from "./hero.mjs";
+import { vehicleVisual } from "./vehicle-visual.mjs";
+import {
+  buyerFacts,
+  ownershipSection,
+  videoSection,
+  dealerSection,
+} from "./showroom.mjs";
 
 export const escape = (value) =>
   String(value).replace(
@@ -70,6 +76,9 @@ const imageSizes = {
   "electric-buggy": [410, 320],
   "mini-cart-plus": [900, 692],
   "cargo-cutout": [636, 479],
+  "hero-neem-mobile": [960, 720],
+  "hero-cargo-mobile": [960, 720],
+  "hero-utility-mobile": [960, 720],
   "gallery-1": [800, 600],
   "gallery-2": [900, 591],
   "gallery-3": [800, 600],
@@ -97,8 +106,8 @@ function header(active) {
             aria-label="Increase text size"
             aria-pressed="false"
           >
-            A<span>+</span></button
-          ><span class="concept-label">Website concept</span>
+            A<span>+</span>
+          </button>
         </div>
       </div>
     </div>
@@ -106,18 +115,13 @@ function header(active) {
       <div class="container masthead">
         <a class="brand" href="/"
           ><img
-            src="/images/kerala-emblem.webp"
-            alt="Government of Kerala emblem"
-            width="62"
-            height="58"
-          /><img
             src="/images/kal-logo.webp"
             alt="KAL logo"
             width="70"
             height="50"
           /><span class="brand-text"
             ><strong>Kerala Automobiles Limited</strong
-            ><span>Department of Industries & Commerce</span></span
+            ><span>Government of Keralam undertaking</span></span
           ></a
         >
         <div class="masthead-actions">
@@ -190,9 +194,27 @@ function header(active) {
               <div class="dropdown-panel dropdown-right">
                 <a href="/contact/">Contact & support</a
                 ><a href="/contact/#enquiry">Vehicle enquiry</a
+                ><a href="/contact/?purpose=fleet#enquiry">Fleet enquiries</a
+                ><a href="/contact/?purpose=dealer#enquiry">Become a dealer</a
                 >${external("/dealer-details", "Dealer network")}
               </div>
             </details>
+            <div class="nav-tools">
+              <a
+                href="${official}/malayalam/"
+                lang="ml"
+                target="_blank"
+                rel="noopener noreferrer"
+                >മലയാളം</a
+              ><button
+                class="text-control"
+                data-text-size
+                aria-label="Increase text size"
+                aria-pressed="false"
+              >
+                A<span>+</span>
+              </button>
+            </div>
           </nav>
           <a class="button button-small" href="/contact/#enquiry"
             >Enquire now</a
@@ -231,6 +253,24 @@ function footer() {
             Aralumoodu P.O., Neyyattinkara<br />Thiruvananthapuram, Kerala · 695
             123
           </p>
+          <div class="social-links" aria-label="KAL social channels">
+            <a
+              href="https://www.instagram.com/kal__md/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Instagram ${icon("external")}</a
+            ><a
+              href="https://www.facebook.com/KeralaAutomobilesLimited"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Facebook ${icon("external")}</a
+            ><a
+              href="https://www.youtube.com/@kalofficial-r7l/videos"
+              target="_blank"
+              rel="noopener noreferrer"
+              >YouTube ${icon("external")}</a
+            >
+          </div>
         </div>
         <div>
           <h3>Explore KAL</h3>
@@ -256,12 +296,9 @@ function footer() {
         </div>
       </div>
       <div class="container footer-bottom">
-        <p>
-          © ${new Date().getFullYear()} Kerala Automobiles Limited · Design
-          demonstration
-        </p>
+        <p>© ${new Date().getFullYear()} Kerala Automobiles Limited</p>
         <a href="${official}" target="_blank" rel="noopener noreferrer"
-          >Visit current official website ${icon("external")}</a
+          >Official KAL website ${icon("external")}</a
         ><a href="/contact/#accessibility">Accessibility</a>
       </div>
     </footer>
@@ -340,6 +377,8 @@ export function layout({
         <link rel="icon" href="/images/favicon.webp" type="image/webp" />
         <link rel="stylesheet" href="/fonts/fonts.css" />
         <link rel="stylesheet" href="/src/style.css" />
+        <link rel="stylesheet" href="/src/premium.css" />
+        <link rel="stylesheet" href="/src/depth.css" />
         <script type="module" src="/src/main.js"></script>
       </head>
       <body class="${active === "home" ? "home-page" : "inner-page"}">
@@ -358,29 +397,35 @@ export function productCard(product) {
       class="product-image"
       href="/products/${product.slug}/"
       aria-label="Explore ${escape(product.name)}"
-      >${image(product.image, product.name)}</a
+      ><span class="product-stage">${vehicleVisual(product)}</span
+      ><span class="product-image-arrow" aria-hidden="true">↗</span></a
     >
     <div class="product-card-body">
       <span class="category-label">${product.label}</span>
       <h3><a href="/products/${product.slug}/">${product.name}</a></h3>
       <p>${product.description}</p>
       <dl class="product-specs">
-        <div>
-          <dt class="sr-only">Overall length</dt>
-          <dd>${icon("ruler")}<span>${product.length}</span></dd>
-        </div>
-        <div>
-          <dt class="sr-only">Gross vehicle weight</dt>
-          <dd>${icon("weight")}<span>${product.weight}</span></dd>
-        </div>
+        ${buyerFacts(product)
+          .map(
+            ([label, value]) =>
+              `<div><dt>${label}</dt><dd>${escape(value)}</dd></div>`,
+          )
+          .join("")}
       </dl>
-      <a class="text-link" href="/products/${product.slug}/"
-        >Explore vehicle <span aria-hidden="true">↗</span></a
-      >
+      <div class="product-card-actions">
+        <a class="button" href="/products/${product.slug}/"
+          >Explore vehicle <span aria-hidden="true">↗</span></a
+        ><a
+          class="card-compare"
+          href="/products/?compare=${product.slug}#compare"
+          aria-label="Compare ${escape(product.name)}"
+          >Compare <span aria-hidden="true">+</span></a
+        >
+      </div>
     </div>
   </article>`;
 }
-export const filters = `<div class="filter-wrap"><div class="filters" role="group" aria-label="Filter vehicles"><button data-filter="all" aria-pressed="true">All vehicles</button><button data-filter="passenger" aria-pressed="false">Passenger</button><button data-filter="goods" aria-pressed="false">Goods transport</button><button data-filter="utility" aria-pressed="false">Utility</button></div></div><details class="spec-legend"><summary>Specification icons explained</summary><div><span>${icon("ruler")}Overall length in millimetres</span><span>${icon("weight")}Gross vehicle weight in kilograms, including vehicle and its permitted load; not payload.</span></div></details>`;
+export const filters = `<div class="filter-wrap"><div class="filters" role="group" aria-label="Filter vehicles"><button data-filter="all" aria-pressed="true">All vehicles</button><button data-filter="passenger" aria-pressed="false">Passenger</button><button data-filter="goods" aria-pressed="false">Goods transport</button><button data-filter="utility" aria-pressed="false">Utility</button></div></div>`;
 export function productSection(all = false) {
   return /* HTML */ `<section
     class="section products-section ${all ? "full-catalog" : ""}"
@@ -392,7 +437,14 @@ export function productSection(all = false) {
       <div class="product-grid">
         ${(all ? products : products.slice(0, 3)).map(productCard).join("")}
       </div>
-      ${!all ? '<p class="catalog-note">Looking for more options? <a href="/products/">Explore our complete range of 9 vehicles.</a></p>' : ""}
+      <div class="showroom-bottom">
+        <p>
+          ${!all ? 'Nine vehicles. Different ways to work. <a href="/products/">Explore the complete range.</a>' : "Find the vehicle that suits your working day."}
+        </p>
+        <a class="text-link" href="/products/#compare"
+          >Compare vehicles ${icon("external")}</a
+        >
+      </div>
     </div>
   </section>`;
 }
@@ -416,7 +468,7 @@ export function leaderCard(person) {
 }
 export function publicStewardship(preview = false) {
   const people = preview
-    ? [...governmentLeaders, boardLeaders[0]]
+    ? [...governmentLeaders, ...boardLeaders]
     : governmentLeaders;
   return `<section class="section stewardship-section" id="government"><div class="container stewardship-grid"><div class="stewardship-intro"><span class="eyebrow">Public stewardship</span><h2>A Government of <span>Keralam undertaking.</span></h2><p>Kerala Automobiles Limited<br>Department of Industries & Commerce</p><a class="text-link" href="${preview ? "/about/#leadership" : official + "/board-of-directors"}" ${preview ? "" : 'target="_blank" rel="noopener noreferrer"'}>${preview ? "Meet our board" : "Official leadership information"} ${icon(preview ? "chevron" : "external")}</a></div><div class="stewardship-people ${preview ? "stewardship-preview" : ""}">${people.map(leaderCard).join("")}</div></div></section>`;
 }
@@ -450,18 +502,28 @@ export function updatesSection(homepage = false) {
     .join("")}</aside></div></div></section>`;
 }
 export function home() {
-  return /* HTML */ `${heroCarousel()} ${trustStrip()}
-    <div class="notice-band">
-      <div class="container notice-inner">
-        <span class="notice-title">${icon("document")}Noticeboard</span>
-        <p>
-          Machine Shop recruitment notification
-          <span class="notice-status">Applications closed · 17 Sep 2026</span>
-        </p>
-        <a href="/news/">View updates <span aria-hidden="true">↗</span></a>
+  return /* HTML */ `${heroCarousel().trimEnd()}
+    <section class="quick-actions" aria-label="Start your electric journey">
+      <div class="container">
+        <a href="#vehicles"
+          >${icon("bolt")}<span>Explore vehicles</span
+          ><span aria-hidden="true">↗</span></a
+        ><a href="/products/#compare"
+          >${icon("ruler")}<span>Compare models</span
+          ><span aria-hidden="true">↗</span></a
+        ><a
+          href="${official}/dealer-details"
+          target="_blank"
+          rel="noopener noreferrer"
+          >${icon("location")}<span>Find a dealer</span
+          ><span aria-hidden="true">↗</span></a
+        ><a href="/contact/#enquiry"
+          >${icon("phone")}<span>Talk to KAL</span
+          ><span aria-hidden="true">↗</span></a
+        >
       </div>
-    </div>
-    ${productSection()}
+    </section>
+    ${productSection()} ${trustStrip()} ${videoSection()} ${ownershipSection()}
     <section class="section about-section">
       <div class="container about-grid">
         <div class="about-photo">
@@ -472,18 +534,23 @@ export function home() {
           </div>
         </div>
         <div class="about-copy">
-          <span class="eyebrow">An enterprise with a purpose</span>
+          <span class="eyebrow">Made here. For the road ahead.</span>
           <h2>Kerala’s own.<br />Built for the future.</h2>
           <p>
             From our first three-wheelers to today’s electric vehicles, KAL has
-            kept Kerala moving. We are a Government of Keralam undertaking under
-            the Industries Department.
+            kept Kerala moving. A Government of Keralam undertaking, with
+            manufacturing rooted in Aralumoodu.
           </p>
           <p>
-            Our expertise goes beyond the road. We also manufacture
-            high-precision aerospace components for VSSC, LPSC and IISU.
+            The same precision behind our vehicles serves India’s space
+            programmes through components for VSSC, LPSC and IISU.
           </p>
-          <a class="button" href="/about/">Discover our story</a>
+          <div class="heritage-links">
+            <a class="button" href="/about/">Discover our story</a
+            ><a class="text-link" href="/manufacturing/"
+              >Our engineering <span aria-hidden="true">↗</span></a
+            >
+          </div>
           <div class="about-facts">
             <div>
               <strong>2019</strong><span>Our transition to electric</span>
@@ -495,103 +562,5 @@ export function home() {
         </div>
       </div>
     </section>
-    ${publicStewardship(true)}
-    <section class="section engineering-section">
-      <div class="container engineering-grid">
-        <div>
-          <span class="eyebrow">Beyond mobility</span>
-          <h2>Precision that serves<br />a bigger mission.</h2>
-          <p>
-            From electric vehicle assembly to high-precision aerospace
-            machining, our Aralumoodu facility brings decades of engineering
-            experience to every component.
-          </p>
-          <a class="text-link" href="/manufacturing/"
-            >Explore our capabilities <span aria-hidden="true">↗</span></a
-          >
-        </div>
-        <div class="capabilities">
-          <div>
-            <span>01</span>
-            <h3>Electric vehicle manufacturing</h3>
-            <p>Assembly, metal forming, pre-treatment and painting.</p>
-          </div>
-          <div>
-            <span>02</span>
-            <h3>Aerospace components</h3>
-            <p>Precision machining for VSSC, LPSC and IISU.</p>
-          </div>
-          <div>
-            <span>03</span>
-            <h3>Quality at every stage</h3>
-            <p>ISO 9001:2015 certified manufacturing systems.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section class="section resources-section">
-      <div class="container">
-        <div class="section-heading">
-          <div>
-            <span class="eyebrow">Open & accessible</span>
-            <h2>Public information,<br />within easy reach.</h2>
-          </div>
-          <a class="text-link" href="/public-information/"
-            >All public resources <span aria-hidden="true">↗</span></a
-          >
-        </div>
-        <div class="resource-grid">
-          <a
-            href="${official}/tenders"
-            target="_blank"
-            rel="noopener noreferrer"
-            >${icon("document")}
-            <h3>Tenders & procurement</h3>
-            <p>Notifications and procurement opportunities.</p>
-            ${icon("external")}</a
-          ><a href="${official}/rti" target="_blank" rel="noopener noreferrer"
-            >${icon("document")}
-            <h3>Right to Information</h3>
-            <p>RTI information and designated officers.</p>
-            ${icon("external")}</a
-          ><a
-            href="${official}/mandatory-disclosures"
-            target="_blank"
-            rel="noopener noreferrer"
-            >${icon("document")}
-            <h3>Mandatory disclosures</h3>
-            <p>Corporate information and public records.</p>
-            ${icon("external")}</a
-          ><a href="/news/"
-            >${icon("document")}
-            <h3>News & careers</h3>
-            <p>Company updates and recruitment notices.</p>
-            <span aria-hidden="true">↗</span></a
-          >
-        </div>
-      </div>
-    </section>
-    ${updatesSection(true)} ${faq}
-    <section class="section home-gallery">
-      <div class="container">
-        <div class="section-heading">
-          <div>
-            <span class="eyebrow">Life at KAL</span>
-            <h2>Progress, in pictures.</h2>
-          </div>
-          <a class="text-link" href="/gallery/"
-            >Visit photo gallery <span aria-hidden="true">↗</span></a
-          >
-        </div>
-        <div class="gallery-preview">
-          ${galleryPhotos
-            .slice(0, 3)
-            .map(
-              (photo) =>
-                `<button class="gallery-preview-photo" data-gallery-image aria-label="View photo: ${escape(photo.caption)}">${image(photo.image, photo.alt)}<span>${photo.caption} ${icon("external")}</span></button>`,
-            )
-            .join("")}
-        </div>
-      </div>
-    </section>`;
+    ${publicStewardship(true)} ${dealerSection()} ${faq}`;
 }

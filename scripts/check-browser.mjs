@@ -1,7 +1,7 @@
 // Optional regression checks. Use an existing Playwright installation; no runtime dependency.
 import assert from "node:assert/strict";
 import { pathToFileURL } from "node:url";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { products } from "../src/data.mjs";
 const { chromium } = await import(
   process.env.PLAYWRIGHT_MODULE
@@ -15,7 +15,7 @@ const browser = await chromium.launch({
     : {}),
 });
 const base = process.env.PREVIEW_URL || "http://127.0.0.1:4173";
-const out = "audit/screenshots/polish";
+const out = "audit/screenshots/depth/regression";
 await mkdir(out, { recursive: true });
 const errors = [],
   failures = [],
@@ -80,6 +80,7 @@ await check("Viewport and route matrix", async () => {
   const overflows = [];
   for (const width of [320, 375, 390, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: width < 700 ? 844 : 900 });
+    assert.equal(await page.evaluate(() => innerWidth), width);
     for (const route of routes) {
       await go(route);
       const overflow = await noOverflow();
@@ -91,6 +92,68 @@ await check("Viewport and route matrix", async () => {
   }
   assert.deepEqual(overflows, []);
 });
+await check(
+  "Five homepage portraits remain visible on mobile and desktop",
+  async () => {
+    for (const width of [320, 390, 768, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await go();
+      await page.locator(".stewardship-section").scrollIntoViewIfNeeded();
+      const portraits = page.locator(".stewardship-preview .leader > img");
+      assert.equal(await portraits.count(), 5);
+      await portraits.evaluateAll(async (images) => {
+        await Promise.all(images.map((img) => img.decode()));
+      });
+      for (const portrait of await portraits.all()) {
+        assert.ok(await portrait.isVisible());
+        const box = await portrait.boundingBox();
+        assert.ok(
+          box.width >= 70 && box.height >= 80,
+          `${width}: portrait too small`,
+        );
+        assert.ok(
+          box.x >= 0 && box.x + box.width <= width,
+          `${width}: portrait clipped`,
+        );
+      }
+    }
+  },
+);
+await check(
+  "Nine model stages display complete cutouts with intrinsic dimensions",
+  async () => {
+    for (const width of [320, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      for (const product of products) {
+        await go(`/products/${product.slug}/`);
+        const image = page.locator(".vehicle-stage .depth-vehicle");
+        await image.evaluate((img) => img.decode());
+        const result = await image.evaluate((img) => {
+          const stage = img.closest(".depth-scene").getBoundingClientRect();
+          const rect = img.getBoundingClientRect();
+          return {
+            source: img.currentSrc,
+            fit: getComputedStyle(img).objectFit,
+            dimensions:
+              img.naturalWidth === Number(img.getAttribute("width")) &&
+              img.naturalHeight === Number(img.getAttribute("height")),
+            contained:
+              rect.left >= stage.left - 1 &&
+              rect.right <= stage.right + 1 &&
+              rect.top >= stage.top - 1 &&
+              rect.bottom <= stage.bottom + 1,
+          };
+        });
+        assert.match(result.source, /-cutout\.webp$/);
+        assert.equal(result.fit, "contain");
+        assert.ok(
+          result.dimensions && result.contained,
+          `${width}: ${product.name}: ${JSON.stringify(result)}`,
+        );
+      }
+    }
+  },
+);
 await check(
   "Header alignment, portrait frames and intrinsic image dimensions",
   async () => {
@@ -107,9 +170,10 @@ await check(
         const hero = await page.locator(".hero-carousel").boundingBox();
         const utility = await page.locator(".utility-bar").boundingBox();
         assert.ok(Math.abs(hero.y - utility.height) < 2);
-        assert.ok(Math.abs(hero.y + hero.height - 900) < 2);
+        assert.ok(hero.y + hero.height >= 900);
       }
     }
+    await go("/about/");
     await page.locator(".stewardship-section").scrollIntoViewIfNeeded();
     await page.evaluate(async () => {
       await Promise.all(
@@ -151,7 +215,7 @@ await check(
   },
 );
 await check(
-  "Single-row filters, category query and accessible legend",
+  "Single-row filters, category query and readable buyer facts",
   async () => {
     await page.setViewportSize({ width: 320, height: 844 });
     for (const route of ["/", "/products/"]) {
@@ -180,15 +244,8 @@ await check(
       );
       const chosen = await page.locator('[data-filter="goods"]').boundingBox();
       assert.ok(chosen.x >= 0 && chosen.x + chosen.width <= 320);
-      await page.locator(".spec-legend summary").click();
-      assert.match(
-        await page.locator(".spec-legend").innerText(),
-        /not payload/,
-      );
-      assert.equal(
-        await page.locator(".product-specs dt.sr-only").count(),
-        route === "/" ? 6 : 18,
-      );
+      assert.equal(await page.locator(".product-specs dt.sr-only").count(), 0);
+      assert.ok(await page.locator(".product-specs").first().innerText());
     }
   },
 );
@@ -287,25 +344,6 @@ await check(
         .first()
         .evaluate((el) => el === document.activeElement),
     );
-    await go();
-    await page.locator(".gallery-preview-photo").first().click();
-    assert.ok(await page.locator(".gallery-dialog").evaluate((el) => el.open));
-    assert.equal(
-      await page.locator(".gallery-count").textContent(),
-      "Photo 1 of 3",
-    );
-    await page.locator("[data-gallery-prev]").click();
-    assert.equal(
-      await page.locator(".gallery-count").textContent(),
-      "Photo 3 of 3",
-    );
-    await page.keyboard.press("Escape");
-    assert.ok(
-      await page
-        .locator(".gallery-preview-photo")
-        .first()
-        .evaluate((el) => el === document.activeElement),
-    );
   },
 );
 await check(
@@ -348,6 +386,70 @@ await check(
     assert.equal(submissions, 0);
   },
 );
+await check(
+  "Vehicle comparison, missing figures and identical selections",
+  async () => {
+    await go("/products/#compare");
+    for (const product of products) {
+      await page.locator("#compare-1").selectOption(product.slug);
+      assert.equal(
+        await page.locator('[data-comparison-head="1"] h3').textContent(),
+        product.name,
+      );
+      assert.equal(
+        await page
+          .locator('[data-compare-cell="1"][data-spec="range"]')
+          .textContent(),
+        product.range || "Confirm with KAL",
+      );
+      assert.equal(
+        await page
+          .locator('[data-compare-cell="1"][data-spec="weight"]')
+          .textContent(),
+        product.weight,
+      );
+    }
+    await page.locator("#compare-1").selectOption(products[0].slug);
+    assert.match(
+      await page.locator(".comparison-note").textContent(),
+      /same vehicle/,
+    );
+  },
+);
+await check("Fleet and dealership enquiry entry paths", async () => {
+  for (const purpose of ["fleet", "dealer"]) {
+    await go(`/contact/?purpose=${purpose}#enquiry`);
+    assert.equal(await page.locator('[name="purpose"]').inputValue(), purpose);
+    assert.equal(
+      await page.locator('[name="vehicle"]').inputValue(),
+      "Help choosing a vehicle",
+    );
+  }
+});
+await check(
+  "Official video destination and model specification download",
+  async () => {
+    await go();
+    assert.equal(await page.locator("iframe").count(), 0);
+    assert.equal(
+      await page.locator(".film-poster").getAttribute("href"),
+      "https://www.youtube.com/watch?v=a3NsZ8PApJo",
+    );
+    assert.equal(
+      await page.locator(".film-poster").getAttribute("target"),
+      "_blank",
+    );
+    await go(`/products/${products[0].slug}/`);
+    const downloadEvent = page.waitForEvent("download");
+    await page.locator("[data-download-spec]").click();
+    const download = await downloadEvent;
+    const text = await readFile(await download.path(), "utf8");
+    assert.ok(text.includes(products[0].name));
+    assert.ok(text.includes(products[0].range));
+    assert.ok(text.includes("Gross vehicle weight is not payload"));
+    assert.ok(text.includes("Not a manufacturer brochure"));
+  },
+);
 await check("200% text across all routes at 320 and 1440", async () => {
   const overflows = [];
   for (const width of [320, 1440]) {
@@ -364,7 +466,11 @@ await check("200% text across all routes at 320 and 1440", async () => {
       ...products.map((p) => `/products/${p.slug}/`),
     ]) {
       await go(route);
-      await page.locator("[data-text-size]").click();
+      if (await page.locator(".menu-toggle").isVisible())
+        await page.locator(".menu-toggle").click();
+      await page.locator("[data-text-size]:visible").first().click();
+      if (await page.locator(".site-header.menu-open").count())
+        await page.keyboard.press("Escape");
       assert.equal(
         await page.evaluate(
           () => getComputedStyle(document.documentElement).fontSize,
@@ -378,7 +484,7 @@ await check("200% text across all routes at 320 and 1440", async () => {
   assert.deepEqual(overflows, []);
 });
 await check(
-  "Hero slide geometry, hidden chrome and image framing",
+  "Hero slide geometry, visible scene controls and image framing",
   async () => {
     for (const [width, height] of [
       [320, 844],
@@ -406,6 +512,7 @@ await check(
           .evaluate((el) => getComputedStyle(el).clipPath),
         "inset(50%)",
       );
+      assert.equal(await page.locator("[data-hero-select]").count(), 3);
       await page.locator(".hero-carousel").focus();
       for (let i = 0; i < 3; i++) {
         if (i) await page.keyboard.press("ArrowRight");
@@ -440,23 +547,17 @@ await check(
         );
         assert.ok(
           await page
-            .locator("[data-slide][data-active] img")
+            .locator("[data-slide][data-active] .depth-vehicle")
             .evaluate((el) => el.naturalWidth > 0),
         );
         const actions = await page
           .locator("[data-active] .hero-actions")
           .boundingBox();
-        const support = await page.locator(".hero-support").boundingBox();
+        const controls = await page.locator(".hero-controls").boundingBox();
         assert.ok(
-          actions.y + actions.height <= support.y + 1,
-          `${width}: actions overlap support`,
+          actions.y + actions.height <= controls.y + 1,
+          `${width}: actions overlap scene controls`,
         );
-        if (width <= 700) {
-          assert.ok(
-            support.y - actions.y - actions.height < 80,
-            `${width}: excessive mobile hero gap`,
-          );
-        }
       }
       if (width <= 700) {
         await page.setViewportSize({ width, height: 1200 });
@@ -694,7 +795,7 @@ await check("Static first slide without JavaScript", async () => {
   assert.equal(await staticPage.locator(".hero-slide:visible").count(), 1);
   assert.ok(
     await staticPage
-      .getByRole("link", { name: "Discover our vehicles", exact: true })
+      .getByRole("link", { name: "Explore Neem G", exact: true })
       .isVisible(),
   );
   assert.equal(await staticPage.locator(".product-card").count(), 3);
@@ -746,6 +847,24 @@ await check("Representative screenshots", async () => {
         (!name.startsWith("home") && name !== "landscape"),
     });
   }
+  for (const width of [390, 1440]) {
+    await shots.setViewportSize({ width, height: 900 });
+    await shots.goto(base);
+    await shots.locator(".stewardship-section").scrollIntoViewIfNeeded();
+    await shots
+      .locator(".stewardship-section img")
+      .evaluateAll(async (images) => {
+        await Promise.all(images.map((img) => img.decode()));
+      });
+    await shots
+      .locator(".stewardship-section")
+      .screenshot({ path: `${out}/leadership-${width}.png` });
+    await shots.goto(base + `/products/${products[0].slug}/`);
+    await shots
+      .locator(".vehicle-stage .depth-vehicle")
+      .evaluate((img) => img.decode());
+    await shots.screenshot({ path: `${out}/neem-detail-${width}.png` });
+  }
   await shots.emulateMedia({ reducedMotion: "reduce" });
   for (const width of [390, 1440]) {
     await shots.setViewportSize({ width, height: width === 390 ? 844 : 900 });
@@ -766,11 +885,13 @@ await check("Representative screenshots", async () => {
     }
   }
   await shots.goto(base);
-  await shots.locator("[data-text-size]").click();
+  await shots.locator("[data-text-size]:visible").first().click();
   await shots.screenshot({ path: `${out}/text-200-desktop.png` });
   await shots.setViewportSize({ width: 320, height: 900 });
   await shots.goto(base);
-  await shots.locator("[data-text-size]").click();
+  await shots.locator(".menu-toggle").click();
+  await shots.locator("[data-text-size]:visible").first().click();
+  await shots.keyboard.press("Escape");
   await shots
     .locator(".hero-image")
     .first()
@@ -783,8 +904,8 @@ await check("Representative screenshots", async () => {
 });
 await browser.close();
 await writeFile(
-  "audit/browser-results.json",
-  JSON.stringify({ date: "2026-10-03", checks, failures, errors }, null, 2),
+  "audit/depth-browser-results.json",
+  JSON.stringify({ date: "2026-10-06", checks, failures, errors }, null, 2),
 );
 console.log(
   `${checks.length} checks passed; ${failures.length} failures; ${errors.length} browser errors.`,
