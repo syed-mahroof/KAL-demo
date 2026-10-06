@@ -16,6 +16,7 @@ Preview: http://127.0.0.1:5173/
 ```sh
 npm run build
 npm run check
+npm run check:impact
 npm run preview
 ```
 
@@ -38,6 +39,9 @@ The preview deliberately uses `noindex, nofollow` in HTML and response headers, 
 - Homepage, about/history, manufacturing, public resources, news, gallery and contact.
 - Nine vehicle detail pages, with layered vehicle artwork, original photographs and published specifications.
 - Vehicle category filters, site search with empty states, keyboard-friendly menus and FAQs.
+- A guided vehicle finder on the homepage and catalogue, with application choices covering all nine models and direct comparison/enquiry links.
+- An interactive fleet calculator with a rickshaw slider handle, distance presets, editable petrol/diesel assumptions, annual tailpipe CO₂ and fuel estimates, and an enquiry draft that retains the selected fleet scenario.
+- The Government of Kerala emblem beside the KAL identity in every desktop and mobile header.
 - Gallery enlargement with next/previous photos and keyboard navigation, text enlargement, visible focus indicators and reduced-motion support.
 - Immersive desktop hero and a model-led mobile showcase, with direct passenger/utility/goods selectors. Pause/resume appears on keyboard focus; heritage/benefit highlights remain accessible.
 - Compact mobile identity, complete-vehicle cutouts over factory/studio backgrounds, lettering behind vehicles, ground shadows, buyer facts and direct model comparison links. Mobile featured vehicles use a native swipe rail.
@@ -52,30 +56,34 @@ The enquiry form sends nothing and stores nothing. “Open email draft” opens 
 
 ## Source structure
 
-| Location                          | Purpose                                                    |
-| --------------------------------- | ---------------------------------------------------------- |
-| `src/templates.mjs`               | Shared header, footer, home page and reusable presentation |
-| `src/pages.mjs`                   | Supporting page content                                    |
-| `src/data.mjs`                    | Vehicle data and search records                            |
-| `src/showroom.mjs`                | Application, comparison, ownership and partner sections    |
-| `src/showroom.css`                | Vehicle presentation and responsive buying journeys        |
-| `src/vehicle-visual.mjs`          | Shared artwork stages and intrinsic image dimensions       |
-| `src/depth.css`                   | Layered vehicle scenes and responsive homepage portraits   |
-| `src/style.css`                   | Design tokens and responsive styling                       |
-| `src/main.js`                     | Small progressive-enhancement interactions                 |
-| `scripts/generate-pages.mjs`      | Static page and metadata generation                        |
-| `scripts/check-build.mjs`         | Built-page metadata, link and asset checks                 |
-| `scripts/prepare-vehicle-art.mjs` | Convert transparent artwork to optimized WebP assets       |
-| `public/images/`                  | Optimized KAL source images                                |
-| `public/fonts/`                   | Self-hosted Manrope and Public Sans                        |
-| `audit/AUDIT.md`                  | Findings and suggested production project scope            |
-| `audit/asset-sources.json`        | Original asset URLs                                        |
+| Location                                            | Purpose                                                           |
+| --------------------------------------------------- | ----------------------------------------------------------------- |
+| `src/templates.mjs`                                 | Shared header, footer, home page and reusable presentation        |
+| `src/pages.mjs`                                     | Supporting page content                                           |
+| `src/data.mjs`                                      | Vehicle data and search records                                   |
+| `src/showroom.mjs`                                  | Application, comparison, ownership and partner sections           |
+| `src/showroom.css`                                  | Vehicle presentation and responsive buying journeys               |
+| `src/vehicle-visual.mjs`                            | Shared artwork stages and intrinsic image dimensions              |
+| `src/depth.css`                                     | Layered vehicle scenes and responsive homepage portraits          |
+| `src/impact.mjs`, `src/impact.js`, `src/impact.css` | Fleet calculator and responsive interactive tool styling          |
+| `src/impact-model.mjs`                              | Validated arithmetic, fuel factors and fleet enquiry parameters   |
+| `src/finder.mjs`, `src/finder.js`                   | Application-based vehicle suggestions and progressive enhancement |
+| `src/style.css`                                     | Design tokens and responsive styling                              |
+| `src/main.js`                                       | Small progressive-enhancement interactions                        |
+| `scripts/generate-pages.mjs`                        | Static page and metadata generation                               |
+| `scripts/check-build.mjs`                           | Built-page metadata, link and asset checks                        |
+| `scripts/check-impact.mjs`                          | Calculator arithmetic, input boundaries and finder mappings       |
+| `scripts/prepare-vehicle-art.mjs`                   | Convert transparent artwork to optimized WebP assets              |
+| `public/images/`                                    | Optimized KAL source images                                       |
+| `public/fonts/`                                     | Self-hosted Manrope and Public Sans                               |
+| `audit/AUDIT.md`                                    | Findings and suggested production project scope                   |
+| `audit/asset-sources.json`                          | Original asset URLs                                               |
 
 Generated HTML files are build inputs. Edit `src/` rather than the generated pages, then run `npm run generate` to refresh the local preview. Vite updates client JavaScript and CSS automatically; template changes require regeneration.
 
-The latest presentation, asset provenance and verification are in [audit/DEPTH.md](audit/DEPTH.md), with screenshots in `audit/screenshots/depth/regression/`. Earlier research and decisions remain in `audit/TRANSFORMATION.md`, `audit/REFINEMENT.md`, `audit/POLISH.md` and `audit/QA.md`.
+The latest interactions, calculation methodology and verification are in [audit/INTERACTIVE.md](audit/INTERACTIVE.md), with screenshots in `audit/screenshots/interactive/regression/`. Vehicle artwork provenance remains in [audit/DEPTH.md](audit/DEPTH.md). Earlier research and decisions remain in `audit/TRANSFORMATION.md`, `audit/REFINEMENT.md`, `audit/POLISH.md` and `audit/QA.md`.
 
-For optional browser regression checks, run `npm run preview` after building, then `node scripts/check-browser.mjs`. This uses an existing Playwright installation rather than adding it to the project's dependencies. If it is installed elsewhere, set `PLAYWRIGHT_MODULE` to its absolute `index.mjs` path; set `BROWSER_EXECUTABLE` when an existing Chromium executable must be selected. `PREVIEW_URL` defaults to `http://127.0.0.1:4173`. Results are written to `audit/depth-browser-results.json`.
+For optional browser regression checks, run `npm run preview` after building, then `node scripts/check-browser.mjs`. This uses an existing Playwright installation rather than adding it to the project's dependencies. If it is installed elsewhere, set `PLAYWRIGHT_MODULE` to its absolute `index.mjs` path; set `BROWSER_EXECUTABLE` when an existing Chromium executable must be selected. `PREVIEW_URL` defaults to `http://127.0.0.1:4173`. Results are written to `audit/interactive-browser-results.json`.
 
 ## Production SEO handover
 

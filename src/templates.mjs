@@ -8,6 +8,8 @@ import {
 } from "./data.mjs";
 import { heroCarousel } from "./hero.mjs";
 import { vehicleVisual } from "./vehicle-visual.mjs";
+import { impactSection } from "./impact.mjs";
+import { vehicleFinder } from "./finder.mjs";
 import {
   buyerFacts,
   ownershipSection,
@@ -115,6 +117,13 @@ function header(active) {
       <div class="container masthead">
         <a class="brand" href="/"
           ><img
+            class="government-emblem"
+            src="/images/kerala-emblem.webp"
+            alt="Government of Kerala emblem"
+            width="130"
+            height="80"
+          /><img
+            class="brand-logo"
             src="/images/kal-logo.webp"
             alt="KAL logo"
             width="70"
@@ -379,6 +388,7 @@ export function layout({
         <link rel="stylesheet" href="/src/style.css" />
         <link rel="stylesheet" href="/src/premium.css" />
         <link rel="stylesheet" href="/src/depth.css" />
+        <link rel="stylesheet" href="/src/impact.css" />
         <script type="module" src="/src/main.js"></script>
       </head>
       <body class="${active === "home" ? "home-page" : "inner-page"}">
@@ -434,6 +444,7 @@ export function productSection(all = false) {
     <div class="container">
       ${all ? '<h2 class="sr-only">Vehicle range</h2>' : '<div class="section-heading"><div><span class="eyebrow">Our electric vehicles</span><h2>Purpose-built for<br>the roads ahead.</h2></div><div class="section-heading-side"><p>From passenger journeys to the last mile.<br>Discover electric mobility, made in Kerala.</p><a class="text-link" href="/products/">View all vehicles <span aria-hidden="true">↗</span></a></div></div>'}${filters}
       <p class="sr-only filter-status" role="status" aria-live="polite"></p>
+      ${vehicleFinder(icon)}
       <div class="product-grid">
         ${(all ? products : products.slice(0, 3)).map(productCard).join("")}
       </div>
@@ -524,6 +535,7 @@ export function home() {
       </div>
     </section>
     ${productSection()} ${trustStrip()} ${videoSection()} ${ownershipSection()}
+    ${impactSection(icon)}
     <section class="section about-section">
       <div class="container about-grid">
         <div class="about-photo">

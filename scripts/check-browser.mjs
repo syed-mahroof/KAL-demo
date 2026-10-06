@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { pathToFileURL } from "node:url";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { products } from "../src/data.mjs";
+import { finderChoices, finderModel } from "../src/finder.mjs";
 const { chromium } = await import(
   process.env.PLAYWRIGHT_MODULE
     ? pathToFileURL(process.env.PLAYWRIGHT_MODULE).href
@@ -15,7 +16,7 @@ const browser = await chromium.launch({
     : {}),
 });
 const base = process.env.PREVIEW_URL || "http://127.0.0.1:4173";
-const out = "audit/screenshots/depth/regression";
+const out = "audit/screenshots/interactive/regression";
 await mkdir(out, { recursive: true });
 const errors = [],
   failures = [],
@@ -88,10 +89,146 @@ await check("Viewport and route matrix", async () => {
         overflows.push({ route, ...overflow });
       assert.equal(await page.locator("h1").count(), 1, route);
       assert.equal(await page.locator("main").count(), 1, route);
+      assert.ok(
+        await page.locator(".site-header .government-emblem").isVisible(),
+        `${route}: government emblem missing`,
+      );
     }
   }
   assert.deepEqual(overflows, []);
 });
+await check(
+  "Rickshaw fleet slider, estimates, validation and enquiry handoff",
+  async () => {
+    await page.setViewportSize({ width: 390, height: 900 });
+    await go();
+    await page.locator("#fleet-impact").scrollIntoViewIfNeeded();
+    const metric = (key) => page.locator(`[data-impact-value="${key}"]`);
+    assert.equal(await metric("tonnes").textContent(), "56.3");
+    assert.equal(await metric("fuel").textContent(), "24,000");
+    assert.equal(await metric("distance").textContent(), "6,00,000");
+    const range = page.getByRole("slider", {
+      name: "Fleet size slider",
+      exact: true,
+    });
+    // Chrome does not expose its native thumb through getComputedStyle.
+    // Capture the rendered control for visual verification instead.
+    await range.screenshot({ path: `${out}/rickshaw-slider.png` });
+    await range.press("End");
+    assert.equal(await page.locator("#impact-fleet").inputValue(), "500");
+    assert.equal(await metric("tonnes").textContent(), "1,126.9");
+    await range.press("Home");
+    await range.press("ArrowRight");
+    assert.equal(await range.getAttribute("aria-valuetext"), "2 vehicles");
+    await page
+      .getByRole("button", { name: "Add one fleet vehicle", exact: true })
+      .click();
+    await page.locator('[data-daily-preset="120"]').click();
+    assert.equal(await page.locator("#impact-fleet").inputValue(), "3");
+    assert.equal(await metric("tonnes").textContent(), "10.1");
+    await page.locator(".impact-assumptions summary").click();
+    await page.locator("#impact-efficiency").fill("0");
+    assert.ok(await page.locator("[data-impact-error]").isVisible());
+    assert.equal(await metric("tonnes").textContent(), "—");
+    await page.locator("#impact-efficiency").fill("25");
+    await page.locator("#impact-fuel").selectOption("diesel");
+    await page.locator("#impact-days").fill("365");
+    assert.equal(await metric("fuel").textContent(), "5,256");
+    assert.equal(await metric("tonnes").textContent(), "14.1");
+    assert.ok(!(await page.locator("[data-impact-error]").isVisible()));
+    assert.match(
+      await page.locator(".impact-boundary").textContent(),
+      /tailpipe-only estimate/,
+    );
+    await page.locator(".impact-method summary").click();
+    assert.match(
+      await page.locator(".impact-method a").getAttribute("href"),
+      /epa\.gov/,
+    );
+    await page.locator("[data-impact-enquire]").click();
+    assert.equal(await page.locator('[name="purpose"]').inputValue(), "fleet");
+    const message = await page.locator('[name="message"]').inputValue();
+    assert.match(message, /3 electric vehicles/);
+    assert.match(message, /120 km per vehicle per day/);
+    assert.match(message, /365 operating days/);
+    assert.match(message, /diesel comparison assumes 25 km/);
+  },
+);
+await check("Guided vehicle finder covers all nine real models", async () => {
+  await page.setViewportSize({ width: 390, height: 900 });
+  await go();
+  await page.locator(".vehicle-finder summary").click();
+  for (const [work, choice] of Object.entries(finderChoices)) {
+    await page.locator(`[data-finder-work="${work}"]`).click();
+    for (const [need] of choice.needs) {
+      await page.locator("[data-finder-need]").selectOption(need);
+      const model = finderModel(work, need);
+      assert.equal(
+        await page.locator(".finder-copy h3").textContent(),
+        model.name,
+      );
+      assert.equal(
+        await page.locator(".finder-links .button").getAttribute("href"),
+        `/products/${model.slug}/`,
+      );
+      assert.match(
+        await page
+          .locator(".finder-links .text-link")
+          .first()
+          .getAttribute("href"),
+        new RegExp(model.slug),
+      );
+    }
+  }
+  await go("/products/?category=goods");
+  await page.locator(".vehicle-finder summary").click();
+  assert.equal(
+    await page
+      .locator('[data-finder-work="goods"]')
+      .getAttribute("aria-pressed"),
+    "true",
+  );
+  assert.equal(
+    await page.locator(".finder-copy h3").textContent(),
+    "Kerala Green Stream",
+  );
+});
+await check(
+  "Expanded tools and maximum estimates fit mobile, tablet and enlarged text",
+  async () => {
+    for (const [width, enlarged] of [
+      [320, false],
+      [390, false],
+      [768, false],
+      [1440, false],
+      [320, true],
+      [1440, true],
+    ]) {
+      await page.setViewportSize({ width, height: 900 });
+      await go();
+      if (enlarged) {
+        if (await page.locator(".menu-toggle").isVisible())
+          await page.locator(".menu-toggle").click();
+        await page.locator("[data-text-size]:visible").first().click();
+        if (await page.locator(".site-header.menu-open").count())
+          await page.keyboard.press("Escape");
+      }
+      await page.locator(".vehicle-finder summary").click();
+      await page.locator('[data-finder-work="utility"]').click();
+      await page.locator(".impact-assumptions summary").click();
+      await page.locator("#impact-fleet").fill("500");
+      await page.locator("#impact-daily").press("End");
+      await page.locator("#impact-days").fill("365");
+      await page.locator("#impact-efficiency").fill("5");
+      await page.locator("#impact-fuel").selectOption("diesel");
+      const bounds = await noOverflow();
+      assert.ok(
+        bounds.total <= bounds.width + 1,
+        `${width}, enlarged=${enlarged}: ${JSON.stringify(bounds)}`,
+      );
+    }
+  },
+);
 await check(
   "Five homepage portraits remain visible on mobile and desktop",
   async () => {
@@ -799,6 +936,11 @@ await check("Static first slide without JavaScript", async () => {
       .isVisible(),
   );
   assert.equal(await staticPage.locator(".product-card").count(), 3);
+  assert.ok(await staticPage.locator("#impact-fleet").isDisabled());
+  assert.equal(
+    await staticPage.locator('[data-impact-value="tonnes"]').textContent(),
+    "56.3",
+  );
   await staticPage.screenshot({ path: out + "/no-js-mobile.png" });
   await staticPage.close();
 });
@@ -865,6 +1007,20 @@ await check("Representative screenshots", async () => {
       .evaluate((img) => img.decode());
     await shots.screenshot({ path: `${out}/neem-detail-${width}.png` });
   }
+  for (const width of [320, 390, 1440]) {
+    await shots.setViewportSize({ width, height: width < 700 ? 1800 : 1100 });
+    await shots.goto(base);
+    await shots.locator("#fleet-impact").scrollIntoViewIfNeeded();
+    await shots
+      .locator("#fleet-impact")
+      .screenshot({ path: `${out}/fleet-impact-${width}.png` });
+    await shots.locator(".vehicle-finder summary").click();
+    await shots.locator('[data-finder-work="goods"]').click();
+    await shots.locator("[data-finder-need]").selectOption("covered");
+    await shots
+      .locator(".vehicle-finder")
+      .screenshot({ path: `${out}/vehicle-finder-${width}.png` });
+  }
   await shots.emulateMedia({ reducedMotion: "reduce" });
   for (const width of [390, 1440]) {
     await shots.setViewportSize({ width, height: width === 390 ? 844 : 900 });
@@ -902,12 +1058,13 @@ await check("Representative screenshots", async () => {
   });
   await shots.close();
 });
-await browser.close();
 await writeFile(
-  "audit/depth-browser-results.json",
+  "audit/interactive-browser-results.json",
   JSON.stringify({ date: "2026-10-06", checks, failures, errors }, null, 2),
 );
 console.log(
   `${checks.length} checks passed; ${failures.length} failures; ${errors.length} browser errors.`,
 );
 if (failures.length || errors.length) process.exitCode = 1;
+// Preserve completed results even if the host browser is slow to shut down.
+await browser.close();

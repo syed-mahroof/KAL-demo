@@ -11,6 +11,7 @@
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
     "check": "node scripts/check-build.mjs",
+    "check:impact": "node scripts/check-impact.mjs",
     "format": "prettier --write src scripts *.js *.json README.md audit/AUDIT.md"
   },
   "devDependencies": {

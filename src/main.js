@@ -2,6 +2,12 @@ import { searchItems, products } from "./data.mjs";
 import { vehicleVisual } from "./vehicle-visual.mjs";
 import "./carousel.js";
 import "./trust.js";
+import "./impact.js";
+import "./finder.js";
+import {
+  fleetSettingsFromQuery,
+  fleetEnquiryMessage,
+} from "./impact-model.mjs";
 
 const header = document.querySelector(".site-header");
 const menuToggle = document.querySelector(".menu-toggle");
@@ -283,6 +289,12 @@ if (form) {
     form.elements.purpose.value = purpose;
     form.elements.vehicle.value = "Help choosing a vehicle";
   }
+  const fleetSettings =
+    purpose === "fleet"
+      ? fleetSettingsFromQuery(new URLSearchParams(location.search))
+      : null;
+  if (fleetSettings)
+    form.elements.message.value = fleetEnquiryMessage(fleetSettings);
   const selected = new URLSearchParams(location.search).get("vehicle");
   if (
     selected &&
@@ -327,7 +339,9 @@ document.querySelectorAll("[data-compare]").forEach((select) => {
     const slot = select.dataset.compare;
     if (!product) return;
     const head = document.querySelector(`[data-comparison-head="${slot}"]`);
-    head.querySelector(".comparison-photo").innerHTML = vehicleVisual(product, { context: "compare" });
+    head.querySelector(".comparison-photo").innerHTML = vehicleVisual(product, {
+      context: "compare",
+    });
     head.querySelector("h3").textContent = product.name;
     head.querySelector("a").href = `/products/${product.slug}/`;
     document
